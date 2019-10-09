@@ -5,10 +5,10 @@
 //amd draw player base on new position (hide the old and draw the new one)
 //dir: 'u' for move up, 'd' for move down
 //render: render for draw and hide
-void Player::Move(char dir, SDL_Renderer* render)
+void Player::Move(char dir)
 {
 	//hide old one
-	Hide(render);
+	Hide();
 
 	//calcualte new position
 	if (dir == 'u')
@@ -21,11 +21,11 @@ void Player::Move(char dir, SDL_Renderer* render)
 	}
 
 	//draw new one
-	Draw(render);
+	Draw();
 }
 
 //Description: show player to the board
-void Player::Draw(SDL_Renderer* render)
+void Player::Draw()
 {
 	//do something
 	SDL_Rect rect;
@@ -34,15 +34,15 @@ void Player::Draw(SDL_Renderer* render)
 	rect.h = _length;
 	rect.w = _width;
 
-	SDL_SetRenderDrawColor(render, 0, 0, 255, 255);
+	SDL_SetRenderDrawColor(_render, 0, 0, 255, 255);
 
-	SDL_RenderFillRect(render, &rect);
+	SDL_RenderFillRect(_render, &rect);
 
-	SDL_RenderPresent(render);
+	SDL_RenderPresent(_render);
 }
 
 //Description: hide player
-void Player::Hide(SDL_Renderer* render)
+void Player::Hide()
 {
 	SDL_Rect rect;
 	rect.x = _pos.x;
@@ -51,11 +51,11 @@ void Player::Hide(SDL_Renderer* render)
 	rect.w = _width;
 
 	//draw black rectangle
-	SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(_render, 0, 0, 0, 255);
 
-	SDL_RenderFillRect(render, &rect);
+	SDL_RenderFillRect(_render, &rect);
 
-	SDL_RenderPresent(render);
+	SDL_RenderPresent(_render);
 }
 
 //Description: create a player with pos (0, 0) and all default value (can use for 1280x720)
@@ -69,22 +69,24 @@ Player::Player()
 	_id = 0;
 }
 
-Player::Player(Point pos, int id)
+Player::Player(Point pos, int id, SDL_Renderer* render)
 {
 	_pos = pos;
 	_length = DEFAULT_LENGTH;
 	_width = DEFAULT_WIDTH;
 	_speed = DEFAULT_SPEED;
 	_id = id;
+	_render = render;
 }
 
-Player::Player(Point pos, int length, int width, int speed, int id)
+Player::Player(Point pos, int length, int width, int speed, int id, SDL_Renderer* render)
 {
 	_pos = pos;
 	_length = length;
 	_width = width;
 	_speed = speed;
 	_id = id;
+	_render = render;
 }
 
 Player::~Player()
