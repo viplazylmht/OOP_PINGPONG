@@ -3,7 +3,7 @@
 
 //Description: change position of x, and y base on give char
 //amd draw player base on new position (hide the old and draw the new one)
-//dir: 'l' for move left, 'r' for move right
+//dir: 'u' for move up, 'd' for move down
 //render: render for draw and hide
 void Player::Move(char dir, SDL_Renderer* render)
 {
@@ -63,18 +63,18 @@ Player::Player()
 {
 	_pos.x = 0;
 	_pos.y = 0;
-	_length = DEFAULTLENGTH;
-	_width = DEFAULTWIDTH;
-	_speed = DEFAULTSPEED;
+	_length = DEFAULT_LENGTH;
+	_width = DEFAULT_WIDTH;
+	_speed = DEFAULT_SPEED;
 	_id = 0;
 }
 
 Player::Player(Point pos, int id)
 {
 	_pos = pos;
-	_length = DEFAULTLENGTH;
-	_width = DEFAULTWIDTH;
-	_speed = DEFAULTSPEED;
+	_length = DEFAULT_LENGTH;
+	_width = DEFAULT_WIDTH;
+	_speed = DEFAULT_SPEED;
 	_id = id;
 }
 
