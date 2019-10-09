@@ -1,24 +1,26 @@
 #pragma once
+
+#include "LibGame.h"
+
 class Player
 {
 //attributes:
 private:
-	int _x, _y;		//will be point
+	Point _pos;		
 	int _length;
 	int _width;
 	int _speed;
 	int _id;		//1 or 2
 
 public:
-	int X() { return _x; }
-	int Y() { return _y; }
+	Point Pos() { return _pos; }
 	int Length() { return _length; }
 	int ID() { return _id; }
 
 //constructor and destructor:
 public:
 	Player();
-	Player(int x, int y, int length, int width, int speed, int id);
+	Player(Point pos, int length, int width, int speed, int id);
 	~Player();
 
 //method

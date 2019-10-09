@@ -7,11 +7,11 @@ void Player::Move(char dir)
 {
 	if (dir == 'l')
 	{
-		_x -= _speed;
+		_pos.x -= _speed;
 	}
 	else if (dir == 'r')
 	{
-		_x += _speed;
+		_pos.x += _speed;
 	}
 }
 
@@ -24,18 +24,17 @@ void Player::Draw()
 
 Player::Player()
 {
-	_x = 0;
-	_y = 0;
+	_pos.x = 0;
+	_pos.y = 0;
 	_length = 0;
 	_width = 0;
 	_speed = 0;
 	_id = 0;
 }
 
-Player::Player(int x, int y, int length, int width, int speed, int id)
+Player::Player(Point pos, int length, int width, int speed, int id)
 {
-	_x = x;
-	_y = y;
+	_pos = pos;
 	_length = length;
 	_width = width;
 	_speed = speed;
