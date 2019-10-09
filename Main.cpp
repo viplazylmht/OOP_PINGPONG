@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Player.h"
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
@@ -21,6 +22,7 @@ int main() {
 		printf("Could not create window %s\n", SDL_GetError());
 		return -1;
 	}
+	SDL_Renderer* render = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 	SDL_Delay(5000);
 
