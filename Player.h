@@ -7,9 +7,9 @@
 #include "SDL.h"
 
 //default value with 1280x720
-#define DEFAULTLENGTH 100
-#define DEFAULTWIDTH 20
-#define DEFAULTSPEED 10
+#define DEFAULT_LENGTH 100
+#define DEFAULT_WIDTH 20
+#define DEFAULT_SPEED 10
 
 class Player
 {

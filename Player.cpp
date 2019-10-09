@@ -63,18 +63,18 @@ Player::Player()
 {
 	_pos.x = 0;
 	_pos.y = 0;
-	_length = DEFAULTLENGTH;
-	_width = DEFAULTWIDTH;
-	_speed = DEFAULTSPEED;
+	_length = DEFAULT_LENGTH;
+	_width = DEFAULT_WIDTH;
+	_speed = DEFAULT_SPEED;
 	_id = 0;
 }
 
 Player::Player(Point pos, int id)
 {
 	_pos = pos;
-	_length = DEFAULTLENGTH;
-	_width = DEFAULTWIDTH;
-	_speed = DEFAULTSPEED;
+	_length = DEFAULT_LENGTH;
+	_width = DEFAULT_WIDTH;
+	_speed = DEFAULT_SPEED;
 	_id = id;
 }
 
