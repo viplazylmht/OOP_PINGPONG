@@ -40,7 +40,7 @@ public:
 public:
 	//Descirption: draw board, player and ball
 	//Return: -1 if failse
-	bool DrawGame();
+	void DrawGame();
 	void Play();
 private:
 	void GetKey1();
