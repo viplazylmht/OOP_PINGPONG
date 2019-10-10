@@ -9,8 +9,14 @@ void Player::Move(char dir)
 {
 	//hide old one
 	Hide();
-	_rect.y = _pos.y;
-
+	if (dir == 'u')
+	{
+		_pos.y -= _speed;
+	}
+	if (dir == 'd')
+	{
+		_pos.y += _speed;
+	}
 	_rect.y = _pos.y;
 
 	//draw new one
@@ -25,7 +31,7 @@ void Player::Draw()
 
 	SDL_RenderFillRect(_render, &_rect);
 
-	SDL_RenderPresent(_render);
+	//SDL_RenderPresent(_render);
 }
 
 //Description: hide player
@@ -36,7 +42,7 @@ void Player::Hide()
 
 	SDL_RenderFillRect(_render, &_rect);
 
-	SDL_RenderPresent(_render);
+	//SDL_RenderPresent(_render);
 }
 
 //Description: create a player with pos (0, 0) and all default value (can use for 1280x720)
@@ -56,6 +62,7 @@ Player::Player()
 	_rect.h = _length;
 	_rect.w = _width;
 
+	Draw();
 }
 //Description: create a player with given pos and id. All remain use default value (can use for 1280x720)
 Player::Player(Point pos, int id, SDL_Renderer* render)
@@ -71,9 +78,9 @@ Player::Player(Point pos, int id, SDL_Renderer* render)
 	_rect.y = _pos.y;
 	_rect.h = _length;
 	_rect.w = _width;
-
 	_render = render;
 
+	Draw();
 }
 
 Player::Player(Point pos, int length, int width, int speed, int id, SDL_Renderer* render)
@@ -92,6 +99,7 @@ Player::Player(Point pos, int length, int width, int speed, int id, SDL_Renderer
 	_rect.h = _length;
 	_rect.w = _width;
 
+	Draw();
 }
 
 Player::~Player()

@@ -7,7 +7,7 @@ class Player
 {
 public:
 	// const
-	static const int DEFAULT_LENGTH = 100;
+	static const int DEFAULT_LENGTH = 200;
 	static const int DEFAULT_WIDTH = 20;
 	static const int DEFAULT_SPEED = 10;
 	//attributes:
@@ -26,6 +26,7 @@ public:
 	Point Pos() { return _pos; }
 	int Length() { return _length; }
 	int Width() { return _width; }
+	int Speed() { return _speed; }
 	int ID() { return _id; }
 	
 	//void SetRender(SDL_Renderer* render) { _render = render; }

@@ -44,7 +44,7 @@ public:
 	//method
 public:
 	//Descirption: draw board, player and ball
-	//Return: -1 if failse
+	//Return: -1 if fail
 	void Play();
 	bool initSDL(SDL_Window*&, SDL_Renderer*&, int, int);
 	void closeSDL(SDL_Window*&, SDL_Renderer*&);
