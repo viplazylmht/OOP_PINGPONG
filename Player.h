@@ -4,6 +4,11 @@
 #define SDL_MAIN_HANDLED
 #include "SDL.h"
 
+//default value with 1280x720
+#define DEFAULT_LENGTH 100
+#define DEFAULT_WIDTH 20
+#define DEFAULT_SPEED 10
+
 class Player
 {
 public:
@@ -22,10 +27,12 @@ private:
 	
 	//frontend
 	SDL_Renderer* _render;
+	SDL_Rect _rect;
 
 public:
 	Point Pos() { return _pos; }
 	int Length() { return _length; }
+	int Width() { return _width; }
 	int ID() { return _id; }
 	
 	//void SetRender(SDL_Renderer* render) { _render = render; }

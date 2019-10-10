@@ -20,6 +20,8 @@ void Player::Move(char dir)
 		_pos.y += _speed;
 	}
 
+	_rect.y = _pos.y;
+
 	//draw new one
 	Draw();
 }
@@ -27,16 +29,16 @@ void Player::Move(char dir)
 //Description: show player to the board
 void Player::Draw()
 {
-	//do something
-	SDL_Rect rect;
-	rect.x = _pos.x;
-	rect.y = _pos.y;
-	rect.h = _length;
-	rect.w = _width;
+	SDL_SetRenderDrawColor(_render, 0, 0, 255, 255);
+
+
+	SDL_RenderFillRect(_render, &_rect);
+
 
 	SDL_SetRenderDrawColor(_render, 0, 0, 255, 255);
 
 	SDL_RenderFillRect(_render, &rect);
+
 
 	SDL_RenderPresent(_render);
 }
@@ -44,15 +46,10 @@ void Player::Draw()
 //Description: hide player
 void Player::Hide()
 {
-	SDL_Rect rect;
-	rect.x = _pos.x;
-	rect.y = _pos.y;
-	rect.h = _length;
-	rect.w = _width;
-
 	//draw black rectangle
 	SDL_SetRenderDrawColor(_render, 0, 0, 0, 255);
 
+	SDL_RenderFillRect(_render, &_rect);
 	SDL_RenderFillRect(_render, &rect);
 
 	SDL_RenderPresent(_render);
@@ -61,6 +58,8 @@ void Player::Hide()
 //Description: create a player with pos (0, 0) and all default value (can use for 1280x720)
 Player::Player()
 {
+
+	//backend
 	_render = nullptr;
 	_pos.x = 0;
 	_pos.y = 0;
@@ -68,26 +67,57 @@ Player::Player()
 	_width = DEFAULT_WIDTH;
 	_speed = DEFAULT_SPEED;
 	_id = 0;
+
+	//fontend
+	_rect.x = _pos.x;
+	_rect.y = _pos.y;
+	_rect.h = _length;
+	_rect.w = _width;
+
 }
+
+PlayerObject
+//Description: create a player with given pos and id. All remain use default value (can use for 1280x720)
 
 Player::Player(Point pos, int id, SDL_Renderer* render)
 {
+	//backend
 	_pos = pos;
 	_length = DEFAULT_LENGTH;
 	_width = DEFAULT_WIDTH;
 	_speed = DEFAULT_SPEED;
 	_id = id;
+PlayerObject
+
+	//fontend
 	_render = render;
+	_rect.x = _pos.x;
+	_rect.y = _pos.y;
+	_rect.h = _length;
+	_rect.w = _width;
+
+	_render = render;
+
 }
 
 Player::Player(Point pos, int length, int width, int speed, int id, SDL_Renderer* render)
 {
+	//backend
 	_pos = pos;
 	_length = length;
 	_width = width;
 	_speed = speed;
 	_id = id;
+
+	//fontend
 	_render = render;
+	_rect.x = _pos.x;
+	_rect.y = _pos.y;
+	_rect.h = _length;
+	_rect.w = _width;
+
+	_render = render;
+
 }
 
 Player::~Player()
