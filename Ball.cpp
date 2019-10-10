@@ -122,7 +122,7 @@ void Ball::Draw()
 void Ball::Hide()
 {
 	// Draw a transparent circle to graphic here  
-	fill_circle(_render, _center.x, _center.y, _radius, 0, 200, 0, 0xFF);
+	fill_circle(_render, _center.x, _center.y, _radius, 0, 0, 0, 0xFF);
 
 	//SDL_RenderPresent(_render);
 }
