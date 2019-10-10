@@ -201,6 +201,7 @@ MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int C
 	//create ball 
 	_ball = Ball(_render, { 50, 50 }, 20, 4, 5);
 
+
 }
 MainGame::~MainGame()
 {
@@ -262,5 +263,6 @@ void MainGame::closeSDL(SDL_Window*& window, SDL_Renderer*& renderer)
 	renderer = NULL;
 
 	//Quit SDL subsystems
+
 	SDL_Quit();
 }
