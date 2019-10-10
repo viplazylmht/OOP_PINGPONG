@@ -2,6 +2,9 @@
 #include "LibGame.h"
 #include <math.h>
 
+#include <SDL.h>
+
+#define SDL_MAIN_HANDLED
 
 class Ball
 {
@@ -14,14 +17,17 @@ public:
 	static const int BORDER_BOTTOM = 4;
 	static const int BORDER_CORNER = 5;
 
-	// const for speed
-	static const int MAX_SPEED = 10;
+	// const for speed per FPS
+	static const int MAX_SPEED = 25;
 
 private:
 	// Position
 	Point _center;
 	int _radius;
 
+
+	// SDL windows
+	SDL_Renderer* _render;
 
 	// Vector speed
 	float _i;
@@ -61,6 +67,9 @@ public:
 	// Description: Show the ball to the board 
 	void Draw();
 
+	// Description: Hide the ball
+	void Hide();
+	
 	// Description: Increase speed of the ball
 	void LevelUp();
 
@@ -71,6 +80,8 @@ public:
 	Ball();
 
 	// Description: Init tha ball with default pos, radius and vector speed
-	Ball(Point firstLocation, int radius, int axisI, int axisJ);
+	Ball(SDL_Renderer* render, Point firstLocation, int radius, int axisI, int axisJ);
 };
 
+// Description: Create and fill a cricle with given RGBA color 
+void fill_circle(SDL_Renderer*, int, int, int, Uint8, Uint8, Uint8, Uint8);
