@@ -15,6 +15,7 @@ void Player::Move(char dir)
 
 	//draw new one
 	Draw();
+}
 
 //Description: show player to the board
 void Player::Draw()
@@ -22,7 +23,7 @@ void Player::Draw()
 
 	SDL_SetRenderDrawColor(_render, 0, 0, 255, 255);
 
-	SDL_RenderFillRect(_render, &rect);
+	SDL_RenderFillRect(_render, &_rect);
 
 	SDL_RenderPresent(_render);
 }
@@ -41,9 +42,7 @@ void Player::Hide()
 //Description: create a player with pos (0, 0) and all default value (can use for 1280x720)
 Player::Player()
 {
-
 	//backend
-	_render = nullptr;
 	_pos.x = 0;
 	_pos.y = 0;
 	_length = DEFAULT_LENGTH;
@@ -77,7 +76,7 @@ Player::Player(Point pos, int id, SDL_Renderer* render)
 
 }
 
-Player::Player(Point pos, int length, int width, int speed, int id)
+Player::Player(Point pos, int length, int width, int speed, int id, SDL_Renderer* render)
 {
 	//backend
 	_pos = pos;
@@ -92,8 +91,6 @@ Player::Player(Point pos, int length, int width, int speed, int id)
 	_rect.y = _pos.y;
 	_rect.h = _length;
 	_rect.w = _width;
-
-	_render = render;
 
 }
 
