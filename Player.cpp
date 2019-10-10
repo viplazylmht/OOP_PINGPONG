@@ -61,6 +61,7 @@ Player::Player()
 	_rect.y = _pos.y;
 	_rect.h = _length;
 	_rect.w = _width;
+	_render = nullptr;
 
 	Draw();
 }

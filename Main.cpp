@@ -1,5 +1,6 @@
 #include <iostream>
 #include "MainGame.h"
+
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 
