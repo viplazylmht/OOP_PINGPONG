@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LibGame.h"
+<<<<<<< HEAD
 #define SDL_MAIN_HANDLED
 #include "SDL.h"
 
@@ -20,6 +21,14 @@ public:
 private:
 	//backend
 	Point _pos;
+=======
+
+class Player
+{
+//attributes:
+private:
+	Point _pos;		
+>>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
 	int _length;
 	int _width;
 	int _speed;
@@ -37,27 +46,35 @@ public:
 	
 	//void SetRender(SDL_Renderer* render) { _render = render; }
 
-	//constructor and destructor:
+//constructor and destructor:
 public:
-	//Description: create a player with pos (0, 0), id = 0 and all default value (can use for 1280x720)
 	Player();
+<<<<<<< HEAD
 	//Description: create a player with given pos and id. All remain use default value (can use for 1280x720)
 	Player(Point pos, int id, SDL_Renderer* render);
 	Player(Point pos, int length, int width, int speed, int id, SDL_Renderer* render);
+=======
+	Player(Point pos, int length, int width, int speed, int id);
+>>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
 	~Player();
 
-	//method
+//method
 public:
 	//Description: change position of x, and y base on give char
-	//amd draw player base on new position (hide the old and draw the new one)
 	//dir: 'l' for move left, 'r' for move right
+<<<<<<< HEAD
 	//render: render for draw and hide
+=======
+>>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
 	void Move(char dir);
 
 	//Description: show player to the board
 	void Draw();
+<<<<<<< HEAD
 
 	//Description: hide player
 	void Hide();
+=======
+>>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
 };
 
