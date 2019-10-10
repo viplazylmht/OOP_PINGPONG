@@ -24,10 +24,12 @@ private:
 	
 	//frontend
 	SDL_Renderer* _render;
+	SDL_Rect _rect;
 
 public:
 	Point Pos() { return _pos; }
 	int Length() { return _length; }
+	int Width() { return _width; }
 	int ID() { return _id; }
 	
 	//void SetRender(SDL_Renderer* render) { _render = render; }
