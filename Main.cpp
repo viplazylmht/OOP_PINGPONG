@@ -1,7 +1,10 @@
 #include <iostream>
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "MainGame.h"
 =======
+=======
+>>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
@@ -28,6 +31,9 @@ int main() {
 		printf("Could not create window %s\n", SDL_GetError());
 		return -1;
 	}
+<<<<<<< HEAD
+>>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
+=======
 >>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
 
 	// game launcher already appeared from here

@@ -2,6 +2,7 @@
 
 #include "LibGame.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define SDL_MAIN_HANDLED
 #include "SDL.h"
 
@@ -21,6 +22,14 @@ public:
 private:
 	//backend
 	Point _pos;
+=======
+
+class Player
+{
+//attributes:
+private:
+	Point _pos;		
+>>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
 =======
 
 class Player
@@ -50,10 +59,13 @@ public:
 public:
 	Player();
 <<<<<<< HEAD
+<<<<<<< HEAD
 	//Description: create a player with given pos and id. All remain use default value (can use for 1280x720)
 	Player(Point pos, int id, SDL_Renderer* render);
 	Player(Point pos, int length, int width, int speed, int id, SDL_Renderer* render);
 =======
+=======
+>>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
 	Player(Point pos, int length, int width, int speed, int id);
 >>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
 	~Player();
@@ -63,7 +75,10 @@ public:
 	//Description: change position of x, and y base on give char
 	//dir: 'l' for move left, 'r' for move right
 <<<<<<< HEAD
+<<<<<<< HEAD
 	//render: render for draw and hide
+=======
+>>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
 =======
 >>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
 	void Move(char dir);
@@ -71,9 +86,12 @@ public:
 	//Description: show player to the board
 	void Draw();
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 	//Description: hide player
 	void Hide();
+=======
+>>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
 =======
 >>>>>>> parent of ae03b0e... Merge pull request #5 from viplazylmht/PlayerObject
 };
