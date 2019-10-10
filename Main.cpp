@@ -1,10 +1,14 @@
 #include <iostream>
-#include "Player.h"
-
+#include "MainGame.h"
 
 using namespace std;
 int main() {
 
-	cout << "Hello World!\n";
+	MainGame gamePlay;
+
+	// game launcher already appeared from here
+
+	gamePlay.Play();
+
 	return 0;
 }

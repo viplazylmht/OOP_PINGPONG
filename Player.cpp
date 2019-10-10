@@ -61,6 +61,7 @@ void Player::Hide()
 //Description: create a player with pos (0, 0) and all default value (can use for 1280x720)
 Player::Player()
 {
+	_render = nullptr;
 	_pos.x = 0;
 	_pos.y = 0;
 	_length = DEFAULT_LENGTH;
