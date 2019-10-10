@@ -2,6 +2,8 @@
 
 Ball::Ball()
 {
+	_render = nullptr;
+
 	_center.x = 0;
 	_center.y = 0;
 
@@ -82,8 +84,10 @@ bool Ball::Collide(int DIRECTION)
 	return true;
 }
 
-Ball::Ball(Point firstLocation, int radius, int axisI, int axisJ)
+Ball::Ball(SDL_Renderer* render, Point firstLocation, int radius, int axisI, int axisJ)
 {
+	_render = render;
+
 	_center = firstLocation;
 	_radius = radius;
 
@@ -96,14 +100,31 @@ Ball::Ball(Point firstLocation, int radius, int axisI, int axisJ)
 
 void Ball::Move()
 {
+	// Hide old ball
+	Hide();
+
 	// move one step 
 	_center.x += AxisI();
 	_center.y += AxisJ();
+
+	// Draw new ball
+	Draw();
 }
 
 void Ball::Draw()
 {
-	// Draw to graphic here  
+	// Draw Blue circle to graphic here  
+	fill_circle(_render,_center.x, _center.y, _radius, 0, 0, 0xFF, 0xFF);
+
+	//SDL_RenderPresent(_render);
+}
+
+void Ball::Hide()
+{
+	// Draw a transparent circle to graphic here  
+	fill_circle(_render, _center.x, _center.y, _radius, 0, 200, 0, 0xFF);
+
+	//SDL_RenderPresent(_render);
 }
 
 void Ball::LevelUp()
@@ -115,5 +136,30 @@ void Ball::LevelUp()
 		_j += _j / 10;
 
 		SyncSpeed();
+	}
+}
+
+void fill_circle(SDL_Renderer* render, int cx, int cy, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+	for (double dy = 1; dy <= radius; dy += 1.0)
+	{
+		 //This loop is unrolled a bit, only iterating through half of the
+		 //height of the circle.  The result is used to draw a scan line and
+		 //its mirror image below it.
+
+		 //The following formula has been simplified from our original.  We
+		 //are using half of the width of the circle because we are provided
+		 //with a center and we need left/right coordinates.
+
+		double dx = floor(sqrt((2.0 * radius * dy) - (dy * dy)));
+		int x = cx - dx;
+		SDL_SetRenderDrawColor(render, r, g, b, a);
+
+		// Draw first half of circle
+		SDL_RenderDrawLine(render, cx - dx, cy + dy - radius, cx + dx, cy + dy - radius);
+		
+		// Draw second half of circle
+		SDL_RenderDrawLine(render, cx - dx, cy - dy + radius, cx + dx, cy - dy + radius);
+
 	}
 }
