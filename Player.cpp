@@ -31,7 +31,14 @@ void Player::Draw()
 {
 	SDL_SetRenderDrawColor(_render, 0, 0, 255, 255);
 
+
 	SDL_RenderFillRect(_render, &_rect);
+
+
+	SDL_SetRenderDrawColor(_render, 0, 0, 255, 255);
+
+	SDL_RenderFillRect(_render, &rect);
+
 
 	SDL_RenderPresent(_render);
 }
@@ -43,6 +50,7 @@ void Player::Hide()
 	SDL_SetRenderDrawColor(_render, 0, 0, 0, 255);
 
 	SDL_RenderFillRect(_render, &_rect);
+	SDL_RenderFillRect(_render, &rect);
 
 	SDL_RenderPresent(_render);
 }
@@ -50,7 +58,9 @@ void Player::Hide()
 //Description: create a player with pos (0, 0) and all default value (can use for 1280x720)
 Player::Player()
 {
+
 	//backend
+	_render = nullptr;
 	_pos.x = 0;
 	_pos.y = 0;
 	_length = DEFAULT_LENGTH;
@@ -66,7 +76,9 @@ Player::Player()
 
 }
 
+PlayerObject
 //Description: create a player with given pos and id. All remain use default value (can use for 1280x720)
+
 Player::Player(Point pos, int id, SDL_Renderer* render)
 {
 	//backend
@@ -75,6 +87,7 @@ Player::Player(Point pos, int id, SDL_Renderer* render)
 	_width = DEFAULT_WIDTH;
 	_speed = DEFAULT_SPEED;
 	_id = id;
+PlayerObject
 
 	//fontend
 	_render = render;
@@ -82,6 +95,9 @@ Player::Player(Point pos, int id, SDL_Renderer* render)
 	_rect.y = _pos.y;
 	_rect.h = _length;
 	_rect.w = _width;
+
+	_render = render;
+
 }
 
 Player::Player(Point pos, int length, int width, int speed, int id, SDL_Renderer* render)
@@ -99,6 +115,9 @@ Player::Player(Point pos, int length, int width, int speed, int id, SDL_Renderer
 	_rect.y = _pos.y;
 	_rect.h = _length;
 	_rect.w = _width;
+
+	_render = render;
+
 }
 
 Player::~Player()
