@@ -13,8 +13,10 @@ void MainGame::Play()
 	// Listener for keyboard
 	SDL_Event e;
 
+	_isCPU = true;
 	_player1.Draw();
 	_player2.Draw();
+	CPU cpu;
 
 	_isPlaying = true;
 
@@ -37,21 +39,29 @@ void MainGame::Play()
 				_player1.Move('u');
 			}
 		}
-
-		if (keyboardState[SDL_SCANCODE_DOWN])
+		// lock player2 if play with computer
+		if (!_isCPU)
 		{
-			if (_player2.Pos().y + _player2.Length() + _player2.Speed() <= _height)
+			if (keyboardState[SDL_SCANCODE_DOWN])
 			{
-				_player2.Move('d');
+				if (_player2.Pos().y + _player2.Length() + _player2.Speed() <= _height)
+				{
+					_player2.Move('d');
+				}
+			}
+
+			else if (keyboardState[SDL_SCANCODE_UP])
+			{
+				if (_player2.Pos().y - _player2.Speed() >= 0)
+				{
+					_player2.Move('u');
+				}
 			}
 		}
-
-		else if (keyboardState[SDL_SCANCODE_UP])
+		//play computer
+		else
 		{
-			if (_player2.Pos().y - _player2.Speed() >= 0)
-			{
-				_player2.Move('u');
-			}
+			_player2.Move(cpu.CalcDirection(_ball, _player2, _height));			
 		}
 
 		//Handle events on queue
@@ -110,7 +120,7 @@ void MainGame::Play()
 
 		_ball.Move();
 
-		cout << "SPEED: " << _ball.Speed() << endl;
+		cout << "SPEED: " << _ball.Speed() << " I: " << _ball.AxisI() << " J: " << _ball.AxisJ() << endl;
 		//fill_circle(render, 100, 100, 50, 0xFF, 0x00, 0xFF, 0xFF);
 
 
@@ -120,7 +130,6 @@ void MainGame::Play()
 	}
 
 }
-
 
 void MainGame::Win()
 {
@@ -137,6 +146,7 @@ MainGame::MainGame()
 	_isPlaying = false;
 	_initSucess = false;
 
+	_isCPU = false;
 	_winner = 0;
 
 	_initSucess = initSDL(_window, _render, _width, _height);
@@ -148,9 +158,9 @@ MainGame::MainGame()
 	_player2 = Player({_width - Player::DEFAULT_WIDTH, 0}, 2, _render);
 
 	//create ball
-	_ball = Ball(_render, { 50, 50 }, 20, 4, 5);
+	_ball = Ball(_render, { 50, 50 }, 20);
 }
-MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int CUSTOM_FPS=DEFAULT_FPS)
+MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int CUSTOM_FPS = DEFAULT_FPS)
 {
 	_width = width;
 	_height = height;
@@ -161,6 +171,7 @@ MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int C
 
 	_initSucess = initSDL(_window, _render, width, height);
 
+	_isCPU = false;
 	_winner = 0;
 
 
@@ -171,14 +182,13 @@ MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int C
 	_player2 = Player({ _width - DEFAULT_WIDTH, 0 }, 2, _render);
 
 	//create ball 
-	_ball = Ball(_render, { 50, 50 }, 20, 4, 5);
+	_ball = Ball(_render, { 50, 50 }, 20);
 
 }
 MainGame::~MainGame()
 {
 	closeSDL(_window, _render);
 }
-
 
 bool MainGame::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, int SCREEN_WIDTH = DEFAULT_WIDTH, int SCREEN_HEIGHT = DEFAULT_HEIGHT)
 {
