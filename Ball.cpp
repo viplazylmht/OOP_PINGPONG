@@ -117,7 +117,7 @@ void Ball::Move()
 void Ball::Draw()
 {
 	// Draw Blue circle to graphic here  
-	fill_circle(_render,_center.x, _center.y, _radius, 0, 0, 0xFF, 0xFF);
+	fill_circle(_render,_center.x, _center.y, _radius, 0xFF, 0, 0, 0xFF);
 
 	//SDL_RenderPresent(_render);
 }
