@@ -1,5 +1,6 @@
 #include "MainGame.h"
 
+
 //Descirption: draw board, player and ball
 
 void MainGame::Play()
@@ -22,14 +23,14 @@ void MainGame::Play()
 	while (_isPlaying)
 	{
 		//check key for move player
-		if (keyboardState[SDL_SCANCODE_DOWN])
+		if (keyboardState[SDL_SCANCODE_S])
 		{
 			if (_player1.Pos().y + _player1.Length() + _player1.Speed() <= _height)
 			{
 				_player1.Move('d');
 			}
 		}
-		else if (keyboardState[SDL_SCANCODE_UP])
+		else if (keyboardState[SDL_SCANCODE_W])
 		{
 			if (_player1.Pos().y - _player1.Speed() >= 0)
 			{
@@ -37,7 +38,7 @@ void MainGame::Play()
 			}
 		}
 
-		if (keyboardState[SDL_SCANCODE_S])
+		if (keyboardState[SDL_SCANCODE_DOWN])
 		{
 			if (_player2.Pos().y + _player2.Length() + _player2.Speed() <= _height)
 			{
@@ -45,7 +46,7 @@ void MainGame::Play()
 			}
 		}
 
-		else if (keyboardState[SDL_SCANCODE_W])
+		else if (keyboardState[SDL_SCANCODE_UP])
 		{
 			if (_player2.Pos().y - _player2.Speed() >= 0)
 			{
@@ -67,21 +68,44 @@ void MainGame::Play()
 		//SDL_SetRenderDrawColor(_render, 0, 0, 0, 0xFF);
 		//SDL_RenderClear(_render);
 
-		if (_ball.Center().x <= 0 + _ball.Radius()) {
+		//collide player 1
+		if (_ball.Center().x <= 0 + _ball.Radius() + _player1.Width()
+			&& _ball.Center().y >= _player1.Pos().y
+			&& _ball.Center().y <= _player1.Pos().y + _player1.Length()) 
+		{
 			_ball.Collide(Ball::BORDER_LEFT);
 			_ball.LevelUp();
 		}
-		if (_ball.Center().x >= _width - _ball.Radius()) {
+		//collide player 1
+		if (_ball.Center().x >= _width - _ball.Radius() - _player2.Width()
+			&& _ball.Center().y >= _player2.Pos().y
+			&& _ball.Center().y <= _player2.Pos().y + _player2.Length()) {
 			_ball.Collide(Ball::BORDER_RIGHT);
 			_ball.LevelUp();
 		}
+
+		//collide wall
 		if (_ball.Center().y <= 0 + _ball.Radius()) {
 			_ball.Collide(Ball::BORDER_TOP);
-			_ball.LevelUp();
+			//_ball.LevelUp();
 		}
 		if (_ball.Center().y >= _height - _ball.Radius()) {
 			_ball.Collide(Ball::BORDER_BOTTOM);
-			_ball.LevelUp();
+			//_ball.LevelUp();
+		}
+
+		//goal
+		if (_ball.Center().x <= 0 + _ball.Radius()) {
+			_ball.Collide(Ball::BORDER_LEFT);
+			_winner = 2;
+			Win();
+			//_ball.LevelUp();
+		}
+		if (_ball.Center().x >= _width - _ball.Radius()) {
+			_ball.Collide(Ball::BORDER_RIGHT);
+			_winner = 1;
+			Win();
+			//_ball.LevelUp();
 		}
 
 		_ball.Move();
@@ -94,11 +118,13 @@ void MainGame::Play()
 		SDL_RenderPresent(_render);
 		SDL_Delay(1000 / _fps);
 	}
+
 }
 
 
 void MainGame::Win()
 {
+	_isPlaying = false;
 
 }
 
@@ -111,8 +137,7 @@ MainGame::MainGame()
 	_isPlaying = false;
 	_initSucess = false;
 
-	_keyChar1 = 0;
-	_keyChar2 = 0;
+	_winner = 0;
 
 	_initSucess = initSDL(_window, _render, _width, _height);
 
@@ -136,8 +161,7 @@ MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int C
 
 	_initSucess = initSDL(_window, _render, width, height);
 
-	_keyChar1 = 0;
-	_keyChar2 = 0;
+	_winner = 0;
 
 
 	//create player 1

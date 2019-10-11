@@ -26,10 +26,8 @@ private:
 	Ball _ball;
 	bool _isPlaying;
 	bool _initSucess;
-	char _keyChar1;
-	char _keyChar2;
 	int _fps;
-
+	int _winner;
 
 	//frontend
 	SDL_Window* _window;
