@@ -1,6 +1,7 @@
 #pragma once
 #include "Ball.h"
 #include "Player.h"
+#include "CPU.h"
 #include <stdio.h>
 #include <iostream>
 #include <vector>
@@ -30,6 +31,7 @@ private:
 	bool _initSucess;
 	int _fps;
 	int _winner;
+	bool _isCPU;
 
 	//frontend
 	SDL_Window* _window;

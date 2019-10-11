@@ -8,7 +8,8 @@ Ball::Ball()
 	_center.y = 0;
 
 	_radius = 5;
-	_i = _j = 1;
+
+	RandIandJ(_i, _j);
 
 	SyncSpeed();
 
@@ -84,15 +85,17 @@ bool Ball::Collide(int DIRECTION)
 	return true;
 }
 
-Ball::Ball(SDL_Renderer* render, Point firstLocation, int radius, int axisI, int axisJ)
+Ball::Ball(SDL_Renderer* render, Point firstLocation, int radius)
 {
 	_render = render;
 
 	_center = firstLocation;
 	_radius = radius;
 
-	_i = axisI;
-	_j = axisJ;
+	//_i = axisI;
+	//_j = axisJ;
+
+	RandIandJ(_i, _j);
 
 	SyncSpeed();
 }
@@ -162,4 +165,14 @@ void fill_circle(SDL_Renderer* render, int cx, int cy, int radius, Uint8 r, Uint
 		SDL_RenderDrawLine(render, cx - dx, cy - dy + radius, cx + dx, cy - dy + radius);
 
 	}
+}
+
+void RandIandJ(float& i, float& j)
+{
+	srand(time(NULL));
+	float nextRand = rand() % 3 + 4;
+	i = nextRand;
+
+	nextRand = rand() % 100 % 3 + 4;
+	j = nextRand;
 }

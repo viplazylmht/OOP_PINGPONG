@@ -1,6 +1,8 @@
 #pragma once
 #include "LibGame.h"
 #include <math.h>
+#include <random>
+#include <time.h>   //for random
 #define SDL_MAIN_HANDLED
 
 #include <SDL.h>
@@ -45,8 +47,8 @@ public:
 	Point Center() { return _center; };
 	int Radius() { return _radius; };
 
-	int AxisI() { return (int)_i; };
-	int AxisJ() { return (int)_j; };
+	float AxisI() { return _i; };
+	float AxisJ() { return _j; };
 	int Speed() { return (int)_speed; };
 
 	void SetCenter(Point);
@@ -80,8 +82,11 @@ public:
 	Ball();
 
 	// Description: Init tha ball with default pos, radius and vector speed
-	Ball(SDL_Renderer* render, Point firstLocation, int radius, int axisI, int axisJ);
+	Ball(SDL_Renderer* render, Point firstLocation, int radius);
 };
 
 // Description: Create and fill a cricle with given RGBA color 
 void fill_circle(SDL_Renderer*, int, int, int, Uint8, Uint8, Uint8, Uint8);
+
+//Desctiption: Random axits for ball
+void RandIandJ(float& i, float& j);
