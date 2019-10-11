@@ -3,7 +3,7 @@
 
 //Descirption: draw board, player and ball
 
-void MainGame::Play()
+void MainGame::ShowMainMenu()
 {
 	if (!_initSucess) {
 		cout << "An error occurred while create SDL Windows, quit now!\n";
@@ -13,8 +13,106 @@ void MainGame::Play()
 	// Listener for keyboard
 	SDL_Event e;
 
-	_player1.Draw();
-	_player2.Draw();
+	bool isInMainMenu = true;
+	bool isQuit = false;
+
+	int indexPos = 0;
+	
+	string fontPath = "Lib\\font\\SP3-TravelingTypewriter.ttf";
+
+	vector<SDL_TextView> listText;
+	listText.push_back(SDL_TextView(_render, 530, 300, "Player vs. CPU", 35, fontPath));
+	listText.push_back(SDL_TextView(_render, 500, 400, "Player vs. Player", 35, fontPath));
+	listText.push_back(SDL_TextView(_render, 560, 500, "Quit Game", 35, fontPath));
+
+	
+	listText.push_back(SDL_TextView(_render, 450, 50, "PING PONG", 100, fontPath));
+
+	listText[indexPos].SetFlag(SDL_TextView::SELECTED);
+
+	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
+	bool _isPressed = false;
+
+	while (isInMainMenu)
+	{
+		while (SDL_PollEvent(&e) != 0)
+		{
+			switch (e.type)
+			{
+
+			case SDL_KEYDOWN: {
+				_isPressed = true;
+				break;
+			}
+			case SDL_KEYUP: {
+				_isPressed = false;
+				break;
+			}
+
+			//User requests quit
+			case SDL_QUIT:
+			{
+				isInMainMenu = false;
+				isQuit = true;
+				break;
+			}
+
+			default:
+				break;
+			}
+
+			if (_isPressed) {
+				//check key
+				if (keyboardState[SDL_SCANCODE_UP])
+				{
+					listText[indexPos].SetFlag(SDL_TextView::IN_SELECTED);
+					indexPos = (indexPos > 0) ? indexPos - 1 : 2;
+					listText[indexPos].SetFlag(SDL_TextView::SELECTED);
+				}
+				if (keyboardState[SDL_SCANCODE_DOWN])
+				{
+					listText[indexPos].SetFlag(SDL_TextView::IN_SELECTED);
+					indexPos = (indexPos < 2) ? indexPos + 1 : 0;
+					listText[indexPos].SetFlag(SDL_TextView::SELECTED);
+				}
+
+				// Enter on keyboard (do the same command with Enter on numpad)
+				if (keyboardState[SDL_SCANCODE_RETURN] || keyboardState[SDL_SCANCODE_KP_ENTER])
+				{
+					isInMainMenu = false;
+				}
+			}
+		}
+
+		//Clear screen
+		SDL_SetRenderDrawColor(_render, 0, 0, 0, 0);
+		SDL_RenderClear(_render);
+
+		for (auto text : listText) {
+			text.Show();
+		}
+
+		//Update screen
+		SDL_RenderPresent(_render);
+		SDL_Delay(1000 / _fps);
+	}
+
+	if (isQuit) return;
+
+	if (indexPos ==	1) {
+		Play();
+	}
+}
+
+void MainGame::Play()
+{
+	if (!_initSucess) {
+		cout << "An error occurred while create SDL Windows, quit now!\n";
+		return;
+	}
+
+	// Listener for keyboard
+	SDL_Event e;
 
 	_isPlaying = true;
 
@@ -64,9 +162,9 @@ void MainGame::Play()
 			}
 		}
 
-		////Clear screen
-		//SDL_SetRenderDrawColor(_render, 0, 0, 0, 0xFF);
-		//SDL_RenderClear(_render);
+		//Clear screen
+		SDL_SetRenderDrawColor(_render, 0, 0, 0, 0xFF);
+		SDL_RenderClear(_render);
 
 		//collide player 1
 		if (_ball.Center().x <= 0 + _ball.Radius() + _player1.Width()
@@ -107,6 +205,9 @@ void MainGame::Play()
 			Win();
 			//_ball.LevelUp();
 		}
+
+		_player1.Draw();
+		_player2.Draw();
 
 		_ball.Move();
 
@@ -211,9 +312,16 @@ bool MainGame::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, int SCREEN_
 			}
 			else
 			{
+				//Initialize the truetype font API.
+				if (TTF_Init() < 0)
+				{
+					SDL_Log("%s", TTF_GetError());
+					return false;
+				}
+				else {
 				//Initialize renderer color
 				SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
+				}
 			}
 		}
 	}
@@ -227,6 +335,9 @@ void MainGame::closeSDL(SDL_Window*& window, SDL_Renderer*& renderer)
 	SDL_DestroyWindow(window);
 	window = NULL;
 	renderer = NULL;
+
+	//Shutdown and cleanup the truetype font API.
+	TTF_Quit();
 
 	//Quit SDL subsystems
 	SDL_Quit();

@@ -3,9 +3,11 @@
 #include "Player.h"
 #include <stdio.h>
 #include <iostream>
+#include <vector>
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
+#include "SDL_TextView.h"
 
 using namespace std;
 
@@ -43,6 +45,7 @@ public:
 public:
 	//Descirption: draw board, player and ball
 	//Return: -1 if fail
+	void ShowMainMenu();
 	void Play();
 	bool initSDL(SDL_Window*&, SDL_Renderer*&, int, int);
 	void closeSDL(SDL_Window*&, SDL_Renderer*&);
