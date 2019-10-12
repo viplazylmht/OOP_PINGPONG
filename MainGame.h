@@ -53,8 +53,7 @@ public:
 	void closeSDL(SDL_Window*&, SDL_Renderer*&);
 
 private:
-	void GetKey1();
-	void GetKey2();
+	void CreatePlayerAndBall();
 	void Win();
 };
 
