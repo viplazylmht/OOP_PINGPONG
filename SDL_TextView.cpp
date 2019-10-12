@@ -5,6 +5,13 @@ void SDL_TextView::Show()
 	SDL_RenderCopy(_renderer, _texture, NULL, &_rect);
 }
 
+void SDL_TextView::SetText(string text)
+{
+	_text = text;
+
+	SetColor(_color);
+}
+
 void SDL_TextView::SetColor(SDL_Color color)
 {
 	_color = color;
@@ -14,15 +21,23 @@ void SDL_TextView::SetColor(SDL_Color color)
 	_surface = TTF_RenderText_Solid(_font, _text.c_str(), _color);
 	_texture = SDL_CreateTextureFromSurface(_renderer, _surface);
 
+	SetAlpha(_color.a);
 }
 
 void SDL_TextView::SetColorShaded(SDL_Color fg, SDL_Color bg)
 {
-	_color = bg;
+	_color = fg;
 	// reinit surface in Shaded mode
 	SDL_FreeSurface(_surface);
 	_surface = TTF_RenderText_Shaded(_font, _text.c_str(), fg, bg);
 	_texture = SDL_CreateTextureFromSurface(_renderer, _surface);
+
+	SetAlpha(_color.a);
+}
+
+void SDL_TextView::SetAlpha(char alpha)
+{
+	SDL_SetTextureAlphaMod(_texture, alpha);
 }
 
 void SDL_TextView::SetFlag(int MODE)
@@ -97,5 +112,6 @@ SDL_TextView::SDL_TextView(SDL_Renderer* renderer, int x, int y, string text, in
 
 SDL_TextView::~SDL_TextView()
 {
+	if (!_texture) SDL_DestroyTexture(_texture);
 	if (!_surface) SDL_FreeSurface(_surface);
 }

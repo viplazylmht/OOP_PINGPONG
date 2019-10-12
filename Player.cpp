@@ -7,8 +7,6 @@
 //render: render for draw and hide
 void Player::Move(char dir)
 {
-	//hide old one
-	Hide();
 	if (dir == 'u')
 	{
 		_pos.y -= _speed;
@@ -19,8 +17,6 @@ void Player::Move(char dir)
 	}
 	_rect.y = _pos.y;
 
-	//draw new one
-	Draw();
 }
 
 //Description: show player to the board
@@ -28,17 +24,6 @@ void Player::Draw()
 {
 
 	SDL_SetRenderDrawColor(_render, 0, 0, 255, 255);
-
-	SDL_RenderFillRect(_render, &_rect);
-
-	//SDL_RenderPresent(_render);
-}
-
-//Description: hide player
-void Player::Hide()
-{
-	//draw black rectangle
-	SDL_SetRenderDrawColor(_render, 0, 0, 0, 255);
 
 	SDL_RenderFillRect(_render, &_rect);
 
@@ -81,7 +66,7 @@ Player::Player(Point pos, int id, SDL_Renderer* render)
 	_rect.w = _width;
 	_render = render;
 
-	//Draw();
+	Draw();
 }
 
 Player::Player(Point pos, int length, int width, int speed, int id, SDL_Renderer* render)
@@ -100,7 +85,6 @@ Player::Player(Point pos, int length, int width, int speed, int id, SDL_Renderer
 	_rect.h = _length;
 	_rect.w = _width;
 
-	//Draw();
 }
 
 Player::~Player()
