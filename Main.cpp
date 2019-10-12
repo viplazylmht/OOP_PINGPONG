@@ -24,7 +24,7 @@ int main() {
 	//}
 	// game launcher already appeared from here
 
-	gamePlay.ShowMainMenu();
+	gamePlay.Play();
 
 	return 0;
 }

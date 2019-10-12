@@ -103,9 +103,6 @@ Ball::Ball(SDL_Renderer* render, Point firstLocation, int radius)
 
 void Ball::Move()
 {
-	// Hide old ball
-	Hide();
-
 	// move one step 
 	_center.x += AxisI();
 	_center.y += AxisJ();
@@ -118,14 +115,6 @@ void Ball::Draw()
 {
 	// Draw Blue circle to graphic here  
 	fill_circle(_render,_center.x, _center.y, _radius, 0xFF, 0, 0, 0xFF);
-
-	//SDL_RenderPresent(_render);
-}
-
-void Ball::Hide()
-{
-	// Draw a transparent circle to graphic here  
-	fill_circle(_render, _center.x, _center.y, _radius, 0, 0, 0, 0xFF);
 
 	//SDL_RenderPresent(_render);
 }

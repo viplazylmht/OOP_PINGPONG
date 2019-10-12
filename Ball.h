@@ -68,9 +68,6 @@ public:
 
 	// Description: Show the ball to the board 
 	void Draw();
-
-	// Description: Hide the ball
-	void Hide();
 	
 	// Description: Increase speed of the ball
 	void LevelUp();

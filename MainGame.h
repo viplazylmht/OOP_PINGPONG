@@ -19,6 +19,9 @@ public:
 	static const int DEFAULT_WIDTH = 1280;
 	static const int DEFAULT_HEIGHT = 720;
 	static const int DEFAULT_FPS = 60;
+
+	static const int PLAY_VS_USER = 1;
+	static const int PLAY_VS_CPU = 2;
 	//attribute:
 private:
 	//backend
@@ -36,6 +39,7 @@ private:
 	//frontend
 	SDL_Window* _window;
 	SDL_Renderer* _render;
+	SDL_Rect _verticalLine;
 
 	//constructor and destructor
 public:
@@ -47,14 +51,14 @@ public:
 public:
 	//Descirption: draw board, player and ball
 	//Return: -1 if fail
-	void ShowMainMenu();
+	bool ShowMainMenu();
 	void Play();
 	bool initSDL(SDL_Window*&, SDL_Renderer*&, int, int);
 	void closeSDL(SDL_Window*&, SDL_Renderer*&);
 
 private:
-	void GetKey1();
-	void GetKey2();
+	bool InitData(int);
 	void Win();
+	void DrawCenterLine();
 };
 

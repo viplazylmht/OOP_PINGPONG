@@ -3,11 +3,11 @@
 
 //Descirption: draw board, player and ball
 
-void MainGame::ShowMainMenu()
+bool MainGame::ShowMainMenu()
 {
 	if (!_initSucess) {
 		cout << "An error occurred while create SDL Windows, quit now!\n";
-		return;
+		return false;
 	}
 
 	// Listener for keyboard
@@ -15,7 +15,9 @@ void MainGame::ShowMainMenu()
 
 	bool isInMainMenu = true;
 	bool isQuit = false;
+	bool isInitComplete = false;
 
+	bool _isPressed = false;
 	int indexPos = 0;
 	
 	string fontPath = "Lib\\font\\SP3-TravelingTypewriter.ttf";
@@ -31,8 +33,7 @@ void MainGame::ShowMainMenu()
 	listText[indexPos].SetFlag(SDL_TextView::SELECTED);
 
 	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
-	bool _isPressed = false;
-
+	
 	while (isInMainMenu)
 	{
 		while (SDL_PollEvent(&e) != 0)
@@ -97,16 +98,16 @@ void MainGame::ShowMainMenu()
 		SDL_Delay(1000 / _fps);
 	}
 
-	if (isQuit) return;
-
 	if (indexPos ==	1) {
-		Play();
+		isInitComplete = InitData(PLAY_VS_USER);
 	}
 	if (indexPos ==	0) {
-		_isCPU = true;
-		Play();
+		isInitComplete = InitData(PLAY_VS_CPU);
 	}
 
+	_isPlaying = !isQuit && isInitComplete;
+
+	return _isPlaying;
 }
 
 void MainGame::Play()
@@ -121,121 +122,170 @@ void MainGame::Play()
 
 	CPU cpu;
 
-	_isPlaying = true;
+	string fontPath = "Lib\\font\\SP3-TravelingTypewriter.ttf";
 
 	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
 
-	while (_isPlaying)
-	{
-		//check key for move player
-		if (keyboardState[SDL_SCANCODE_S])
-		{
-			if (_player1.Pos().y + _player1.Length() + _player1.Speed() <= _height)
-			{
-				_player1.Move('d');
-			}
+	while (ShowMainMenu()) {
+
+		vector< SDL_TextView> listText;
+		listText.push_back(SDL_TextView(_render, 200, 300, "Player 1", 50, fontPath));
+		if (_isCPU) {
+			listText.push_back(SDL_TextView(_render, 850, 300, "CPU", 50, fontPath));
 		}
-		else if (keyboardState[SDL_SCANCODE_W])
-		{
-			if (_player1.Pos().y - _player1.Speed() >= 0)
-			{
-				_player1.Move('u');
-			}
+		else {
+			listText.push_back(SDL_TextView(_render, 850, 300, "Player 2", 50, fontPath));
 		}
-		// lock player2 if play with computer
-		if (!_isCPU)
+		listText[0].SetColor({ 255, 255, 255, 80 });
+		listText[1].SetColor({ 255, 255, 255, 80 });
+
+		while (_isPlaying)
 		{
-			if (keyboardState[SDL_SCANCODE_DOWN])
+			//check key for move player
+			if (keyboardState[SDL_SCANCODE_S])
 			{
-				if (_player2.Pos().y + _player2.Length() + _player2.Speed() <= _height)
+				if (_player1.Pos().y + _player1.Length() + _player1.Speed() <= _height)
 				{
-					_player2.Move('d');
+					_player1.Move('d');
+				}
+			}
+			else if (keyboardState[SDL_SCANCODE_W])
+			{
+				if (_player1.Pos().y - _player1.Speed() >= 0)
+				{
+					_player1.Move('u');
+				}
+			}
+			// lock player2 if play with computer
+			if (!_isCPU)
+			{
+				if (keyboardState[SDL_SCANCODE_DOWN])
+				{
+					if (_player2.Pos().y + _player2.Length() + _player2.Speed() <= _height)
+					{
+						_player2.Move('d');
+					}
+				}
+
+				else if (keyboardState[SDL_SCANCODE_UP])
+				{
+					if (_player2.Pos().y - _player2.Speed() >= 0)
+					{
+						_player2.Move('u');
+					}
+				}
+			}
+			//play computer
+			else
+			{
+				_player2.Move(cpu.CalcDirection(_ball, _player2, _height));
+			}
+
+			//Handle events on queue
+			while (SDL_PollEvent(&e) != 0)
+			{
+				//User requests quit
+				if (e.type == SDL_QUIT)
+				{
+					_isPlaying = false;
 				}
 			}
 
-			else if (keyboardState[SDL_SCANCODE_UP])
+			//Clear screen
+			SDL_SetRenderDrawColor(_render, 0, 0, 0, 0xFF);
+			SDL_RenderClear(_render);
+
+			//collide player 1
+			if (_ball.Center().x <= 0 + _ball.Radius() + _player1.Width()
+				&& _ball.Center().y >= _player1.Pos().y
+				&& _ball.Center().y <= _player1.Pos().y + _player1.Length())
 			{
-				if (_player2.Pos().y - _player2.Speed() >= 0)
-				{
-					_player2.Move('u');
-				}
+				_ball.Collide(Ball::BORDER_LEFT);
+				_ball.LevelUp();
 			}
-		}
-		//play computer
-		else
-		{
-			_player2.Move(cpu.CalcDirection(_ball, _player2, _height));			
-		}
-
-		//Handle events on queue
-		while (SDL_PollEvent(&e) != 0)
-		{
-			//User requests quit
-			if (e.type == SDL_QUIT)
-			{
-				_isPlaying = false;
+			//collide player 1
+			if (_ball.Center().x >= _width - _ball.Radius() - _player2.Width()
+				&& _ball.Center().y >= _player2.Pos().y
+				&& _ball.Center().y <= _player2.Pos().y + _player2.Length()) {
+				_ball.Collide(Ball::BORDER_RIGHT);
+				_ball.LevelUp();
 			}
+
+			//collide wall
+			if (_ball.Center().y <= 0 + _ball.Radius()) {
+				_ball.Collide(Ball::BORDER_TOP);
+			}
+			if (_ball.Center().y >= _height - _ball.Radius()) {
+				_ball.Collide(Ball::BORDER_BOTTOM);
+			}
+
+			//goal
+			if (_ball.Center().x <= 0 + _ball.Radius()) {
+				_ball.Collide(Ball::BORDER_LEFT);
+				_winner = 2;
+				Win();
+			}
+			if (_ball.Center().x >= _width - _ball.Radius()) {
+				_ball.Collide(Ball::BORDER_RIGHT);
+				_winner = 1;
+				Win();
+			}
+
+			for (auto text : listText) text.Show();
+
+			DrawCenterLine();
+			_player1.Draw();
+			_player2.Draw();
+			_ball.Move();
+
+			cout << "SPEED: " << _ball.Speed() << " I: " << _ball.AxisI() << " J: " << _ball.AxisJ() << endl;
+			//fill_circle(render, 100, 100, 50, 0xFF, 0x00, 0xFF, 0xFF);
+
+
+			//Update screen
+			SDL_RenderPresent(_render);
+			SDL_Delay(1000 / _fps);
 		}
 
-		//Clear screen
-		SDL_SetRenderDrawColor(_render, 0, 0, 0, 0xFF);
-		SDL_RenderClear(_render);
-
-		//collide player 1
-		if (_ball.Center().x <= 0 + _ball.Radius() + _player1.Width()
-			&& _ball.Center().y >= _player1.Pos().y
-			&& _ball.Center().y <= _player1.Pos().y + _player1.Length()) 
-		{
-			_ball.Collide(Ball::BORDER_LEFT);
-			_ball.LevelUp();
-		}
-		//collide player 1
-		if (_ball.Center().x >= _width - _ball.Radius() - _player2.Width()
-			&& _ball.Center().y >= _player2.Pos().y
-			&& _ball.Center().y <= _player2.Pos().y + _player2.Length()) {
-			_ball.Collide(Ball::BORDER_RIGHT);
-			_ball.LevelUp();
-		}
-
-		//collide wall
-		if (_ball.Center().y <= 0 + _ball.Radius()) {
-			_ball.Collide(Ball::BORDER_TOP);
-		}
-		if (_ball.Center().y >= _height - _ball.Radius()) {
-			_ball.Collide(Ball::BORDER_BOTTOM);
-		}
-
-		//goal
-		if (_ball.Center().x <= 0 + _ball.Radius()) {
-			_ball.Collide(Ball::BORDER_LEFT);
-			_winner = 2;
-			Win();
-		}
-		if (_ball.Center().x >= _width - _ball.Radius()) {
-			_ball.Collide(Ball::BORDER_RIGHT);
-			_winner = 1;
-			Win();
-		}
-
-		_player1.Draw();
-		_player2.Draw();
-		_ball.Move();
-
-		cout << "SPEED: " << _ball.Speed() << " I: " << _ball.AxisI() << " J: " << _ball.AxisJ() << endl;
-		//fill_circle(render, 100, 100, 50, 0xFF, 0x00, 0xFF, 0xFF);
-
-
-		//Update screen
-		SDL_RenderPresent(_render);
-		SDL_Delay(1000 / _fps);
 	}
+}
 
+bool MainGame::InitData(int FLAG)
+{
+	_isCPU = false;
+	switch (FLAG)
+	{
+	case PLAY_VS_CPU: _isCPU = true;
+	case PLAY_VS_USER:
+	{
+		//create player 1
+		_player1 = Player({ 0, 0 }, 1, _render);
+
+		//create player 2
+		_player2 = Player({ _width - Player::DEFAULT_WIDTH, 0 }, 2, _render);
+
+		//create ball
+		_ball = Ball(_render, { 50, 50 }, 20);
+
+		return true;
+	}
+	
+	default:
+		return false;
+	}
 }
 
 void MainGame::Win()
 {
 	_isPlaying = false;
 
+}
+
+void MainGame::DrawCenterLine()
+{
+	SDL_SetRenderDrawColor(_render, 255, 255, 255, 5);
+
+	SDL_RenderFillRect(_render, &_verticalLine);
 }
 
 MainGame::MainGame()
@@ -252,14 +302,14 @@ MainGame::MainGame()
 
 	_initSucess = initSDL(_window, _render, _width, _height);
 
-	//create player 1
-	_player1 = Player({0, 0}, 1, _render);
+	InitData(NULL);
 
-	//create player 2
-	_player2 = Player({_width - Player::DEFAULT_WIDTH, 0}, 2, _render);
+	_verticalLine.w = 3;
+	_verticalLine.h = _height;
 
-	//create ball
-	_ball = Ball(_render, { 50, 50 }, 20);
+	_verticalLine.x = _width / 2 - _verticalLine.w / 2;
+	_verticalLine.y = 0;
+
 }
 MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int CUSTOM_FPS = DEFAULT_FPS)
 {
@@ -275,15 +325,13 @@ MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int C
 	_isCPU = false;
 	_winner = 0;
 
+	InitData(NULL);
 
-	//create player 1
-	_player1 = Player({ 0, 0 }, 1, _render);
+	_verticalLine.w = 3;
+	_verticalLine.h = _height;
 
-	//create player 2
-	_player2 = Player({ _width - DEFAULT_WIDTH, 0 }, 2, _render);
-
-	//create ball 
-	_ball = Ball(_render, { 50, 50 }, 20);
+	_verticalLine.x = _width / 2 - _verticalLine.w / 2;
+	_verticalLine.y = 0;
 
 }
 MainGame::~MainGame()

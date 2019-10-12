@@ -48,7 +48,5 @@ public:
 	//Description: show player to the board
 	void Draw();
 
-	//Description: hide player
-	void Hide();
 };
 
