@@ -66,7 +66,7 @@ Player::Player(Point pos, int id, SDL_Renderer* render)
 	_rect.w = _width;
 	_render = render;
 
-	//Draw();
+	Draw();
 }
 
 Player::Player(Point pos, int length, int width, int speed, int id, SDL_Renderer* render)

@@ -277,7 +277,127 @@ bool MainGame::InitData(int FLAG)
 
 void MainGame::Win()
 {
-	_isPlaying = false;
+	SDL_Event e;
+
+	bool isInWin = true;
+	bool isQuit = false;
+
+	int indexPos = 0;
+
+	string fontPath = "Lib\\font\\SP3-TravelingTypewriter.ttf";
+
+	vector<SDL_TextView> listText;
+	listText.push_back(SDL_TextView(_render, 100, 500, "Play Again", 35, fontPath));
+	listText.push_back(SDL_TextView(_render, 1000, 500, "Main Menu", 35, fontPath));
+
+	//set text for winner
+	string winText = "Player " + to_string(_winner) + " Win!!!";
+	
+	if (_isCPU && _winner == 2)
+	{
+		winText = "CPU Win!!";
+	}
+
+	//other posision if cpu win
+	if (winText == "CPU Win!!")
+	{
+		listText.push_back(SDL_TextView(_render, 520, 300, winText, 80, fontPath));
+	}
+	else
+	{
+		listText.push_back(SDL_TextView(_render, 400, 300, winText, 80, fontPath));
+	}
+	listText.push_back(SDL_TextView(_render, 450, 50, "PING PONG", 100, fontPath));
+
+	listText[indexPos].SetFlag(SDL_TextView::SELECTED);
+
+	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
+	bool _isPressed = false;
+
+	while (isInWin)
+	{
+		while (SDL_PollEvent(&e) != 0)
+		{
+			switch (e.type)
+			{
+
+			case SDL_KEYDOWN: {
+				_isPressed = true;
+				break;
+			}
+			case SDL_KEYUP: {
+				_isPressed = false;
+				break;
+			}
+
+			//User requests quit
+			case SDL_QUIT:
+			{
+				isInWin = false;
+				isQuit = true;
+				break;
+			}
+
+			default:
+				break;
+			}
+
+			if (_isPressed) {
+				//check key
+				if (keyboardState[SDL_SCANCODE_LEFT])
+				{
+					listText[indexPos].SetFlag(SDL_TextView::IN_SELECTED);
+					indexPos = (indexPos > 0) ? indexPos - 1 : 1;
+					listText[indexPos].SetFlag(SDL_TextView::SELECTED);
+				}
+				if (keyboardState[SDL_SCANCODE_RIGHT])
+				{
+					listText[indexPos].SetFlag(SDL_TextView::IN_SELECTED);
+					indexPos = (indexPos < 1) ? indexPos + 1 : 0;
+					listText[indexPos].SetFlag(SDL_TextView::SELECTED);
+				}
+
+				// Enter on keyboard (do the same command with Enter on numpad)
+				if (keyboardState[SDL_SCANCODE_RETURN] || keyboardState[SDL_SCANCODE_KP_ENTER])
+				{
+					isInWin = false;
+				}
+			}
+		}
+
+		//Clear screen
+		SDL_SetRenderDrawColor(_render, 0, 0, 0, 0);
+		SDL_RenderClear(_render);
+
+		for (auto text : listText) {
+			text.Show();
+		}
+
+		//Update screen
+		_player1.Draw();
+		_player2.Draw();
+		_ball.Draw();
+		SDL_RenderPresent(_render);
+		SDL_Delay(1000 / _fps);
+	}
+
+	if (isQuit)
+	{
+		_isPlaying = false;
+	}
+	else if (indexPos == 0) {
+		if (_isCPU) {
+			InitData(PLAY_VS_CPU);
+		}
+		else
+		{
+			InitData(PLAY_VS_USER);
+		}
+		_isPlaying = true;
+	}
+	else if (indexPos == 1) {
+		_isPlaying = false;
+	}
 
 }
 
