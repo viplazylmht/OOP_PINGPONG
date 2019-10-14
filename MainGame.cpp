@@ -144,14 +144,14 @@ void MainGame::Play()
 			//check key for move player
 			if (keyboardState[SDL_SCANCODE_S])
 			{
-				if (_player1.Pos().y + _player1.Length() + _player1.Speed() <= _height)
+				if (_player1.Pos().y + _player1.Length() + _player1.Speed() <= _height - MARGIN_BOTTOM)
 				{
 					_player1.Move('d');
 				}
 			}
 			else if (keyboardState[SDL_SCANCODE_W])
 			{
-				if (_player1.Pos().y - _player1.Speed() >= 0)
+				if (_player1.Pos().y - _player1.Speed() >= 0 + MARGIN_TOP)
 				{
 					_player1.Move('u');
 				}
@@ -161,7 +161,7 @@ void MainGame::Play()
 			{
 				if (keyboardState[SDL_SCANCODE_DOWN])
 				{
-					if (_player2.Pos().y + _player2.Length() + _player2.Speed() <= _height)
+					if (_player2.Pos().y + _player2.Length() + _player2.Speed() <= _height - MARGIN_BOTTOM)
 					{
 						_player2.Move('d');
 					}
@@ -169,7 +169,7 @@ void MainGame::Play()
 
 				else if (keyboardState[SDL_SCANCODE_UP])
 				{
-					if (_player2.Pos().y - _player2.Speed() >= 0)
+					if (_player2.Pos().y - _player2.Speed() >= 0 + MARGIN_TOP)
 					{
 						_player2.Move('u');
 					}
@@ -188,6 +188,7 @@ void MainGame::Play()
 				if (e.type == SDL_QUIT)
 				{
 					_isPlaying = false;
+					return;
 				}
 			}
 
@@ -212,10 +213,10 @@ void MainGame::Play()
 			}
 
 			//collide wall
-			if (_ball.Center().y <= 0 + _ball.Radius()) {
+			if (_ball.Center().y <= 0 + _ball.Radius() + MARGIN_TOP) {
 				_ball.Collide(Ball::BORDER_TOP);
 			}
-			if (_ball.Center().y >= _height - _ball.Radius()) {
+			if (_ball.Center().y >= _height - _ball.Radius() - MARGIN_BOTTOM) {
 				_ball.Collide(Ball::BORDER_BOTTOM);
 			}
 
@@ -224,11 +225,13 @@ void MainGame::Play()
 				_ball.Collide(Ball::BORDER_LEFT);
 				_winner = 2;
 				Win();
+				continue;
 			}
 			if (_ball.Center().x >= _width - _ball.Radius()) {
 				_ball.Collide(Ball::BORDER_RIGHT);
 				_winner = 1;
 				Win();
+				continue;
 			}
 
 			for (auto text : listText) text.Show();
@@ -265,7 +268,7 @@ bool MainGame::InitData(int FLAG)
 		_player2 = Player({ _width - Player::DEFAULT_WIDTH, 0 }, 2, _render);
 
 		//create ball
-		_ball = Ball(_render, { 50, 50 }, 20);
+		_ball = Ball(_render, { 50, 50 }, 15);
 
 		return true;
 	}
@@ -273,6 +276,24 @@ bool MainGame::InitData(int FLAG)
 	default:
 		return false;
 	}
+}
+
+void MainGame::InitLayout()
+{
+	_verticalLine.w = 1;
+	_verticalLine.h = _height - MARGIN_BOTTOM - MARGIN_TOP;
+	_verticalLine.x = _width / 2 - _verticalLine.w / 2;
+	_verticalLine.y = MARGIN_TOP;
+
+	_hozinotalTop.h = 6;
+	_hozinotalTop.w = _width;
+	_hozinotalTop.x = 0;
+	_hozinotalTop.y = 0 + MARGIN_TOP - _hozinotalTop.h;
+
+	_hozinotalBottom.h = 6;
+	_hozinotalBottom.w = _width;
+	_hozinotalBottom.x = 0;
+	_hozinotalBottom.y = _height - MARGIN_BOTTOM;
 }
 
 void MainGame::Win()
@@ -406,6 +427,9 @@ void MainGame::DrawCenterLine()
 	SDL_SetRenderDrawColor(_render, 255, 255, 255, 5);
 
 	SDL_RenderFillRect(_render, &_verticalLine);
+	SDL_RenderFillRect(_render, &_hozinotalBottom);
+	SDL_RenderFillRect(_render, &_hozinotalTop);
+
 }
 
 MainGame::MainGame()
@@ -424,11 +448,7 @@ MainGame::MainGame()
 
 	InitData(NULL);
 
-	_verticalLine.w = 3;
-	_verticalLine.h = _height;
-
-	_verticalLine.x = _width / 2 - _verticalLine.w / 2;
-	_verticalLine.y = 0;
+	InitLayout();
 
 }
 MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int CUSTOM_FPS = DEFAULT_FPS)
@@ -447,12 +467,7 @@ MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int C
 
 	InitData(NULL);
 
-	_verticalLine.w = 3;
-	_verticalLine.h = _height;
-
-	_verticalLine.x = _width / 2 - _verticalLine.w / 2;
-	_verticalLine.y = 0;
-
+	InitLayout();
 }
 MainGame::~MainGame()
 {

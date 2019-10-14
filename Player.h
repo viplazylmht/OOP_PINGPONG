@@ -7,8 +7,8 @@ class Player
 {
 public:
 	// const
-	static const int DEFAULT_LENGTH = 200;
-	static const int DEFAULT_WIDTH = 20;
+	static const int DEFAULT_LENGTH = 100;
+	static const int DEFAULT_WIDTH = 10;
 	static const int DEFAULT_SPEED = 10;
 	//attributes:
 private:

@@ -22,6 +22,12 @@ public:
 
 	static const int PLAY_VS_USER = 1;
 	static const int PLAY_VS_CPU = 2;
+	
+	// margin by pixel
+	static const int MARGIN_TOP = 50;
+	static const int MARGIN_BOTTOM = 50;
+
+	
 	//attribute:
 private:
 	//backend
@@ -39,7 +45,7 @@ private:
 	//frontend
 	SDL_Window* _window;
 	SDL_Renderer* _render;
-	SDL_Rect _verticalLine;
+	SDL_Rect _verticalLine, _hozinotalTop, _hozinotalBottom;
 
 	//constructor and destructor
 public:
@@ -58,6 +64,7 @@ public:
 
 private:
 	bool InitData(int);
+	void InitLayout();
 	void Win();
 	void DrawCenterLine();
 };
