@@ -58,6 +58,15 @@ void SDL_TextView::SetFlag(int MODE)
 	}
 }
 
+void SDL_TextView::SetCenterX(int left, int right)
+{
+	int mainWidth = (right - left);
+	int spaceLeft = mainWidth - _rect.w;
+	
+	//set x for _rect
+	_rect.x = left + spaceLeft / 2;
+}
+
 SDL_TextView::SDL_TextView(SDL_Renderer* renderer,int x, int y, string text, int fontSize, string fontName)
 {
 	_font = TTF_OpenFont(fontName.c_str(), fontSize);

@@ -40,5 +40,8 @@ public:
 	SDL_TextView(SDL_Renderer* renderer, int x, int y, string text, int fontSize, string fontName);
 	SDL_TextView(SDL_Renderer* renderer, int x, int y, string text, int fontSize);
 	~SDL_TextView();
+
+
+	void SetCenterX(int left, int right);
 };
 
