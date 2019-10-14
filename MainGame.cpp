@@ -24,11 +24,16 @@ bool MainGame::ShowMainMenu()
 
 	vector<SDL_TextView> listText;
 	listText.push_back(SDL_TextView(_render, 530, 300, "Player vs. CPU", 35, fontPath));
-	listText.push_back(SDL_TextView(_render, 500, 400, "Player vs. Player", 35, fontPath));
-	listText.push_back(SDL_TextView(_render, 560, 500, "Quit Game", 35, fontPath));
+	listText[listText.size() - 1].SetCenterX(0, _width);
 
+	listText.push_back(SDL_TextView(_render, 500, 400, "Player vs. Player", 35, fontPath));
+	listText[listText.size() - 1].SetCenterX(0, _width);
+	
+	listText.push_back(SDL_TextView(_render, 560, 500, "Quit Game", 35, fontPath));
+	listText[listText.size() - 1].SetCenterX(0, _width);
 	
 	listText.push_back(SDL_TextView(_render, 450, 50, "PING PONG", 100, fontPath));
+	listText[listText.size() - 1].SetCenterX(0, _width);
 
 	listText[indexPos].SetFlag(SDL_TextView::SELECTED);
 
@@ -130,14 +135,18 @@ void MainGame::Play()
 
 		vector< SDL_TextView> listText;
 		listText.push_back(SDL_TextView(_render, 200, 300, "Player 1", 50, fontPath));
+		listText[listText.size() - 1].SetCenterX(0, _width / 2);
+
 		if (_isCPU) {
 			listText.push_back(SDL_TextView(_render, 850, 300, "CPU", 50, fontPath));
 		}
 		else {
 			listText.push_back(SDL_TextView(_render, 850, 300, "Player 2", 50, fontPath));
 		}
-		listText[0].SetColor({ 255, 255, 255, 80 });
-		listText[1].SetColor({ 255, 255, 255, 80 });
+		listText[listText.size() - 1].SetCenterX(_width / 2, _width);
+		
+		listText[0].SetColor({ 255, 255, 255, 120 });
+		listText[1].SetColor({ 255, 255, 255, 120 });
 
 		while (_isPlaying)
 		{
@@ -288,7 +297,10 @@ void MainGame::Win()
 
 	vector<SDL_TextView> listText;
 	listText.push_back(SDL_TextView(_render, 100, 500, "Play Again", 35, fontPath));
+	listText[listText.size() - 1].SetCenterX(0, _width / 2);
+
 	listText.push_back(SDL_TextView(_render, 1000, 500, "Main Menu", 35, fontPath));
+	listText[listText.size() - 1].SetCenterX(_width / 2, _width);
 
 	//set text for winner
 	string winText = "Player " + to_string(_winner) + " Win!!!";
@@ -307,7 +319,9 @@ void MainGame::Win()
 	{
 		listText.push_back(SDL_TextView(_render, 400, 300, winText, 80, fontPath));
 	}
+	listText[listText.size() - 1].SetCenterX(0, _width);
 	listText.push_back(SDL_TextView(_render, 450, 50, "PING PONG", 100, fontPath));
+	listText[listText.size() - 1].SetCenterX(0, _width);
 
 	listText[indexPos].SetFlag(SDL_TextView::SELECTED);
 
