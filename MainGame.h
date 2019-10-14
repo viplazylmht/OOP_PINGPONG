@@ -67,7 +67,5 @@ private:
 	void InitLayout();
 	void Win();
 	void DrawCenterLine();
-	bool IsCollidePlayer1();
-	bool IsCollidePlayer2();
 };
 

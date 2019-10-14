@@ -10,8 +10,6 @@ public:
 	static const int DEFAULT_LENGTH = 100;
 	static const int DEFAULT_WIDTH = 10;
 	static const int DEFAULT_SPEED = 10;
-	static const char MOVE_UP = 'u';
-	static const char MOVE_DOWN = 'd';
 	//attributes:
 private:
 	Point _pos;		
