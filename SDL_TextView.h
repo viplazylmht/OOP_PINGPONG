@@ -5,6 +5,8 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <string>
+#include <fstream>
+
 
 using namespace std;
 
@@ -37,6 +39,7 @@ public:
 	void SetColorShaded(SDL_Color, SDL_Color);
 	void SetAlpha(char);
 	void SetFlag(int);
+	bool SetFont(string, int);
 	SDL_TextView(SDL_Renderer* renderer, int x, int y, string text, int fontSize, string fontName);
 	SDL_TextView(SDL_Renderer* renderer, int x, int y, string text, int fontSize);
 	~SDL_TextView();

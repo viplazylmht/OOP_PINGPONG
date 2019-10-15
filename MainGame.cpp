@@ -128,6 +128,7 @@ void MainGame::Play()
 	CPU cpu;
 
 	string fontPath = "Lib\\font\\SP3-TravelingTypewriter.ttf";
+	string fontPathCP = "Lib\\font\\VeraMoBd.ttf";
 
 	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
 
@@ -150,12 +151,12 @@ void MainGame::Play()
 
 		// text for layout
 
-		listText.push_back(SDL_TextView(_render, 0, 10, "PING PONG V1", 25, fontPath));
+		listText.push_back(SDL_TextView(_render, 0, 10, "PING PONG", 25, fontPathCP));
 		listText[listText.size() - 1].SetCenterX(0, _width);
 
 		listText[listText.size() - 1].SetColor({ 255, 0, 255, 200 });
 
-		listText.push_back(SDL_TextView(_render, 0, _height - MARGIN_BOTTOM + 15, "Copyright by BHD233 & viplazylmht", 18, fontPath));
+		listText.push_back(SDL_TextView(_render, 0, _height - MARGIN_BOTTOM + 15, "Copyright by BHD233 & viplazylmht ! FIT @ HCMUS 2019", 18, fontPathCP));
 		listText[listText.size() - 1].SetCenterX(0, _width);
 		listText[listText.size() - 1].SetColor({ 255, 100, 100, 200 });
 
