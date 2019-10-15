@@ -108,7 +108,7 @@ void Ball::Move()
 	_center.y += AxisJ();
 
 	// Draw new ball
-	Draw();
+	//Draw();
 }
 
 void Ball::Draw()
