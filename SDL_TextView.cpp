@@ -58,6 +58,28 @@ void SDL_TextView::SetFlag(int MODE)
 	}
 }
 
+bool SDL_TextView::SetFont(string fontName, int fontSize)
+{
+	// Check if wrong path font cause of Open direct execute program in Output folder instead of Visual Studio
+	ifstream f(fontName, ios::in);
+	if (f.fail()) {
+
+		// redirect to prev folder that contains font
+		fontName = "..\\" + fontName;
+	}
+	else {
+		f.close();
+	}
+
+	// Initalize new draw font for SDL_TTF
+	_font = TTF_OpenFont(fontName.c_str(), fontSize);
+	if (!_font) {
+		printf("TTF_OpenFont: %s\n", TTF_GetError());
+		return false;
+	}
+	return true;
+}
+
 void SDL_TextView::SetCenterX(int left, int right)
 {
 	int mainWidth = (right - left);
@@ -69,7 +91,7 @@ void SDL_TextView::SetCenterX(int left, int right)
 
 SDL_TextView::SDL_TextView(SDL_Renderer* renderer,int x, int y, string text, int fontSize, string fontName)
 {
-	_font = TTF_OpenFont(fontName.c_str(), fontSize);
+	SetFont(fontName, fontSize);
 	_text = text;
 
 	_rect.x = x;
@@ -80,7 +102,6 @@ SDL_TextView::SDL_TextView(SDL_Renderer* renderer,int x, int y, string text, int
 	TTF_SizeText(_font, _text.c_str(), &w, &h);
 	_rect.w = w;
 	_rect.h = h;
-
 
 	_color = _normalColor;
 
@@ -94,12 +115,9 @@ SDL_TextView::SDL_TextView(SDL_Renderer* renderer,int x, int y, string text, int
 SDL_TextView::SDL_TextView(SDL_Renderer* renderer, int x, int y, string text, int fontSize)
 {
 	// Default font
-	string fontName = "Lib\font\VeraMoBd.ttf";
-	_font = TTF_OpenFont(fontName.c_str(), fontSize);
-	if (!_font) {
-		printf("TTF_OpenFont: %s\n", TTF_GetError());
-		// handle error
-	}
+	string fontName = "Lib\\font\\VeraMoBd.ttf";
+	SetFont(fontName, fontSize);
+	
 	_text = text;
 
 	_rect.x = x;

@@ -128,6 +128,7 @@ void MainGame::Play()
 	CPU cpu;
 
 	string fontPath = "Lib\\font\\SP3-TravelingTypewriter.ttf";
+	string fontPathCP = "Lib\\font\\VeraMoBd.ttf";
 
 	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
 
@@ -148,21 +149,34 @@ void MainGame::Play()
 		listText[0].SetColor({ 255, 255, 255, 120 });
 		listText[1].SetColor({ 255, 255, 255, 120 });
 
+		// text for layout
+
+		listText.push_back(SDL_TextView(_render, 0, 10, "PING PONG", 25, fontPathCP));
+		listText[listText.size() - 1].SetCenterX(0, _width);
+
+		listText[listText.size() - 1].SetColor({ 255, 0, 255, 200 });
+
+		listText.push_back(SDL_TextView(_render, 0, _height - MARGIN_BOTTOM + 15, "Copyright by BHD233 & viplazylmht ! FIT @ HCMUS 2019", 18, fontPathCP));
+		listText[listText.size() - 1].SetCenterX(0, _width);
+		listText[listText.size() - 1].SetColor({ 255, 100, 100, 200 });
+
+		int dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
 		while (_isPlaying)
 		{
-			//check key for move player
+			//play player
+			//check key for move player1
 			if (keyboardState[SDL_SCANCODE_S])
 			{
 				if (_player1.Pos().y + _player1.Length() + _player1.Speed() <= _height - MARGIN_BOTTOM)
 				{
-					_player1.Move('d');
+					_player1.Move(Player::MOVE_DOWN);
 				}
 			}
 			else if (keyboardState[SDL_SCANCODE_W])
 			{
 				if (_player1.Pos().y - _player1.Speed() >= 0 + MARGIN_TOP)
 				{
-					_player1.Move('u');
+					_player1.Move(Player::MOVE_UP);
 				}
 			}
 			// lock player2 if play with computer
@@ -172,7 +186,7 @@ void MainGame::Play()
 				{
 					if (_player2.Pos().y + _player2.Length() + _player2.Speed() <= _height - MARGIN_BOTTOM)
 					{
-						_player2.Move('d');
+						_player2.Move(Player::MOVE_DOWN);
 					}
 				}
 
@@ -180,17 +194,18 @@ void MainGame::Play()
 				{
 					if (_player2.Pos().y - _player2.Speed() >= 0 + MARGIN_TOP)
 					{
-						_player2.Move('u');
+						_player2.Move(Player::MOVE_UP);
 					}
 				}
 			}
 			//play computer
 			else
 			{
-				_player2.Move(cpu.CalcDirection(_ball, _player2, _height));
+				//_player2.Move(cpu.EasyCalcDirection(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM));
+				cpu.MoveToDest(_player2, dest, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM);
 			}
 
-			//Handle events on queue
+			//detect quit button clicked
 			while (SDL_PollEvent(&e) != 0)
 			{
 				//User requests quit
@@ -206,17 +221,15 @@ void MainGame::Play()
 			SDL_RenderClear(_render);
 
 			//collide player 1
-			if (_ball.Center().x <= 0 + _ball.Radius() + _player1.Width()
-				&& _ball.Center().y >= _player1.Pos().y
-				&& _ball.Center().y <= _player1.Pos().y + _player1.Length())
+			if (IsCollidePlayer1())
 			{
 				_ball.Collide(Ball::BORDER_LEFT);
 				_ball.LevelUp();
+				dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
 			}
-			//collide player 1
-			if (_ball.Center().x >= _width - _ball.Radius() - _player2.Width()
-				&& _ball.Center().y >= _player2.Pos().y
-				&& _ball.Center().y <= _player2.Pos().y + _player2.Length()) {
+			//collide player 2
+			if (IsCollidePlayer2()) 
+			{
 				_ball.Collide(Ball::BORDER_RIGHT);
 				_ball.LevelUp();
 			}
@@ -230,27 +243,30 @@ void MainGame::Play()
 			}
 
 			//goal
-			if (_ball.Center().x <= 0 + _ball.Radius()) {
+			if (_ball.Center().x <= 0 + _ball.Radius() && !IsCollidePlayer1()) {
 				_ball.Collide(Ball::BORDER_LEFT);
 				_winner = 2;
 				Win();
+				dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
 				continue;
 			}
-			if (_ball.Center().x >= _width - _ball.Radius()) {
+			if (_ball.Center().x >= _width - _ball.Radius() && !IsCollidePlayer2()) {
 				_ball.Collide(Ball::BORDER_RIGHT);
 				_winner = 1;
 				Win();
+				dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
 				continue;
 			}
+
+			_ball.Move();
 
 			for (auto text : listText) text.Show();
 
 			DrawCenterLine();
 			_player1.Draw();
 			_player2.Draw();
-			_ball.Move();
+			_ball.Draw();
 
-			cout << "SPEED: " << _ball.Speed() << " I: " << _ball.AxisI() << " J: " << _ball.AxisJ() << endl;
 			//fill_circle(render, 100, 100, 50, 0xFF, 0x00, 0xFF, 0xFF);
 
 
@@ -271,10 +287,10 @@ bool MainGame::InitData(int FLAG)
 	case PLAY_VS_USER:
 	{
 		//create player 1
-		_player1 = Player({ 0, 0 }, 1, _render);
+		_player1 = Player({ 0, (_height - Player::DEFAULT_LENGTH) / 2 }, 1, _render);
 
 		//create player 2
-		_player2 = Player({ _width - Player::DEFAULT_WIDTH, 0 }, 2, _render);
+		_player2 = Player({ _width - Player::DEFAULT_WIDTH, (_height + Player::DEFAULT_LENGTH) / 2 }, 2, _render);
 
 		//create ball
 		_ball = Ball(_render, { 50, 50 }, 15);
@@ -548,4 +564,28 @@ void MainGame::closeSDL(SDL_Window*& window, SDL_Renderer*& renderer)
 
 	//Quit SDL subsystems
 	SDL_Quit();
+}
+
+bool MainGame::IsCollidePlayer1()
+{
+	if (_ball.Center().x <= 0 + _ball.Radius() + _player1.Width()
+		&& _ball.Center().y >= _player1.Pos().y
+		&& _ball.Center().y <= _player1.Pos().y + _player1.Length())
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool MainGame::IsCollidePlayer2()
+{
+	if (_ball.Center().x >= _width - _ball.Radius() - _player2.Width()
+		&& _ball.Center().y >= _player2.Pos().y
+		&& _ball.Center().y <= _player2.Pos().y + _player2.Length())
+	{
+		return true;
+	}
+
+	return false;
 }
