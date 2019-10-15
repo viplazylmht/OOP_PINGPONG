@@ -2,6 +2,7 @@
 
 #include "Ball.h"
 #include "Player.h"
+#include "LibGame.h"
 
 class CPU
 {
@@ -9,8 +10,12 @@ public:
 	const int DEFAULT_ERROR = 30;
 private:
 	int _error;		//is dental to make it easier
+	bool _waitToNextMove;
 
 public:
+	bool WaitToNextMove(); 
+	void SetWaitToNextMove(bool);
+
 	CPU();
 	CPU(int error);
 	~CPU();

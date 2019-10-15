@@ -65,13 +65,25 @@ void CPU::MoveToDest(Player &player, int dest, int top, int bottom)
 	}
 }
 
+bool CPU::WaitToNextMove()
+{
+	return _waitToNextMove;
+}
+
+void CPU::SetWaitToNextMove(bool value)
+{
+	_waitToNextMove = value;
+}
+
 CPU::CPU()
 {
+	_waitToNextMove = false;
 	_error = DEFAULT_ERROR;
 }
 
 CPU::CPU(int error)
 {
+	_waitToNextMove = false;
 	_error = error;
 }
 

@@ -1,8 +1,5 @@
 #include "MainGame.h"
 
-
-//Descirption: draw board, player and ball
-
 bool MainGame::ShowMainMenu()
 {
 	if (!_initSucess) {
@@ -13,7 +10,8 @@ bool MainGame::ShowMainMenu()
 	// Listener for keyboard
 	SDL_Event e;
 
-	bool isInMainMenu = true;
+	bool isInMainMenu = true, isInSelectCPU = false;
+
 	bool isQuit = false;
 	bool isInitComplete = false;
 
@@ -39,7 +37,7 @@ bool MainGame::ShowMainMenu()
 
 	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
 	
-	while (isInMainMenu)
+	while (isInMainMenu || isInSelectCPU)
 	{
 		while (SDL_PollEvent(&e) != 0)
 		{
@@ -59,6 +57,8 @@ bool MainGame::ShowMainMenu()
 			case SDL_QUIT:
 			{
 				isInMainMenu = false;
+				isInSelectCPU = false;
+
 				isQuit = true;
 				break;
 			}
@@ -85,7 +85,55 @@ bool MainGame::ShowMainMenu()
 				// Enter on keyboard (do the same command with Enter on numpad)
 				if (keyboardState[SDL_SCANCODE_RETURN] || keyboardState[SDL_SCANCODE_KP_ENTER])
 				{
-					isInMainMenu = false;
+					if (isInMainMenu) {
+
+						if (indexPos == 0) {
+							isInitComplete = InitData(PLAY_VS_CPU);
+
+							isInMainMenu = false;
+							isInSelectCPU = true;
+
+							listText[0].SetText("Normal");
+							listText[1].SetText("Expert");
+							listText[2].SetText("Back");
+							listText[3].SetText("");
+
+							listText[0].SetFlag(SDL_TextView::SELECTED);
+							break;
+						}
+						if (indexPos == 1) {
+							isInitComplete = InitData(PLAY_VS_USER);
+							isInMainMenu = false;
+						}
+
+						if (indexPos == 2) {
+							isInMainMenu = false;
+							isQuit = true;
+						}
+					}
+
+					if (isInSelectCPU) {
+
+						if (indexPos == 2) {
+							listText[indexPos].SetFlag(SDL_TextView::IN_SELECTED);
+
+							listText[0].SetText("Player vs. CPU");
+							listText[1].SetText("Player vs. Player");
+							listText[2].SetText("Quit Game");
+							listText[3].SetText("PING PONG");
+
+							indexPos = 0;
+							listText[indexPos].SetFlag(SDL_TextView::SELECTED);
+							
+							isInMainMenu = true;
+							isInSelectCPU = false;
+						}
+						else {
+							_cpuLevel = indexPos;
+							isInSelectCPU = false;
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -102,14 +150,9 @@ bool MainGame::ShowMainMenu()
 		SDL_RenderPresent(_render);
 		SDL_Delay(1000 / _fps);
 	}
-
-	if (indexPos ==	1) {
-		isInitComplete = InitData(PLAY_VS_USER);
-	}
-	if (indexPos ==	0) {
-		isInitComplete = InitData(PLAY_VS_CPU);
-	}
-
+	
+	
+	
 	_isPlaying = !isQuit && isInitComplete;
 
 	return _isPlaying;
@@ -153,7 +196,6 @@ void MainGame::Play()
 
 		listText.push_back(SDL_TextView(_render, 0, 10, "PING PONG", 25, fontPathCP));
 		listText[listText.size() - 1].SetCenterX(0, _width);
-
 		listText[listText.size() - 1].SetColor({ 255, 0, 255, 200 });
 
 		listText.push_back(SDL_TextView(_render, 0, _height - MARGIN_BOTTOM + 15, "Copyright by BHD233 & viplazylmht ! FIT @ HCMUS 2019", 18, fontPathCP));
@@ -161,6 +203,8 @@ void MainGame::Play()
 		listText[listText.size() - 1].SetColor({ 255, 100, 100, 200 });
 
 		int dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
+		cpu.SetWaitToNextMove(true);
+
 		while (_isPlaying)
 		{
 			//play player
@@ -198,11 +242,15 @@ void MainGame::Play()
 					}
 				}
 			}
-			//play computer
+			//computer turn 
 			else
 			{
-				//_player2.Move(cpu.EasyCalcDirection(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM));
-				cpu.MoveToDest(_player2, dest, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM);
+				if (_cpuLevel == 0 || cpu.WaitToNextMove()) {
+					_player2.Move(cpu.EasyCalcDirection(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM));
+				}
+				else if (_cpuLevel == 1) {
+					cpu.MoveToDest(_player2, dest, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM);
+				}
 			}
 
 			//detect quit button clicked
@@ -226,12 +274,16 @@ void MainGame::Play()
 				_ball.Collide(Ball::BORDER_LEFT);
 				_ball.LevelUp();
 				dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
+				cpu.SetWaitToNextMove(false);
 			}
 			//collide player 2
 			if (IsCollidePlayer2()) 
 			{
 				_ball.Collide(Ball::BORDER_RIGHT);
 				_ball.LevelUp();
+				if (_isCPU) {
+					cpu.SetWaitToNextMove(true);
+				}
 			}
 
 			//collide wall
@@ -262,7 +314,7 @@ void MainGame::Play()
 
 			for (auto text : listText) text.Show();
 
-			DrawCenterLine();
+			DrawLayout();
 			_player1.Draw();
 			_player2.Draw();
 			_ball.Draw();
@@ -452,7 +504,7 @@ void MainGame::Win()
 
 }
 
-void MainGame::DrawCenterLine()
+void MainGame::DrawLayout()
 {
 	SDL_SetRenderDrawColor(_render, 255, 255, 255, 5);
 
@@ -472,6 +524,7 @@ MainGame::MainGame()
 	_initSucess = false;
 
 	_isCPU = false;
+	_cpuLevel = -1;
 	_winner = 0;
 
 	_initSucess = initSDL(_window, _render, _width, _height);
@@ -481,6 +534,7 @@ MainGame::MainGame()
 	InitLayout();
 
 }
+
 MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int CUSTOM_FPS = DEFAULT_FPS)
 {
 	_width = width;
@@ -493,12 +547,14 @@ MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int C
 	_initSucess = initSDL(_window, _render, width, height);
 
 	_isCPU = false;
+	_cpuLevel = -1;
 	_winner = 0;
 
 	InitData(NULL);
 
 	InitLayout();
 }
+
 MainGame::~MainGame()
 {
 	closeSDL(_window, _render);
