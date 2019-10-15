@@ -148,6 +148,17 @@ void MainGame::Play()
 		listText[0].SetColor({ 255, 255, 255, 120 });
 		listText[1].SetColor({ 255, 255, 255, 120 });
 
+		// text for layout
+
+		listText.push_back(SDL_TextView(_render, 0, 10, "PING PONG V1", 25, fontPath));
+		listText[listText.size() - 1].SetCenterX(0, _width);
+
+		listText[listText.size() - 1].SetColor({ 255, 0, 255, 200 });
+
+		listText.push_back(SDL_TextView(_render, 0, _height - MARGIN_BOTTOM + 15, "Copyright by BHD233 & viplazylmht", 18, fontPath));
+		listText[listText.size() - 1].SetCenterX(0, _width);
+		listText[listText.size() - 1].SetColor({ 255, 100, 100, 200 });
+
 		int dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
 		while (_isPlaying)
 		{
