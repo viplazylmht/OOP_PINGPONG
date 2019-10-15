@@ -8,6 +8,16 @@ void SDL_TextView::Show()
 void SDL_TextView::SetText(string text)
 {
 	_text = text;
+	int centerOfScreenW = _rect.x + _rect.w / 2;
+
+	// Get width, height of a given text
+
+	int w, h;
+	TTF_SizeText(_font, text.c_str(), &w, &h);
+	_rect.w = w;
+	_rect.h = h;
+
+	_rect.x = centerOfScreenW - w / 2;
 
 	SetColor(_color);
 }
