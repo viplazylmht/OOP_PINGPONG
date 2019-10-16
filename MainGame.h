@@ -69,10 +69,10 @@ public:
 	void Play();
 
 	// Description: Create and Init SDL, TTF framework
-	bool initSDL(SDL_Window*&, SDL_Renderer*&, int, int);
+	bool InitSDL(SDL_Window*&, SDL_Renderer*&, int, int);
 
 	// Description: Free and close SDL, TTF framework
-	void closeSDL(SDL_Window*&, SDL_Renderer*&);
+	void CloseSDL(SDL_Window*&, SDL_Renderer*&);
 
 private:
 	// Description: Init players and ball
