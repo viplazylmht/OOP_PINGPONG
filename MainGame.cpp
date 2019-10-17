@@ -152,7 +152,6 @@ bool MainGame::ShowMainMenu()
 	}
 	
 	
-	
 	_isPlaying = !isQuit && isInitComplete;
 
 	return _isPlaying;
@@ -265,10 +264,6 @@ void MainGame::Play()
 				}
 			}
 
-			//Clear screen
-			SDL_SetRenderDrawColor(_render, 0x00, 0x1A, 0x00, 0);
-			SDL_RenderClear(_render);
-
 			//collide player 1
 			if (IsCollidePlayer1())
 			{
@@ -301,17 +296,27 @@ void MainGame::Play()
 			if (_ball.Center().x <= 0 + _ball.Radius() && !IsCollidePlayer1()) {
 				_ball.Collide(Ball::BORDER_LEFT);
 				_winner = 2;
-				Win();
-				//dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
+				bool requestQuit = Win();
+				if (requestQuit)
+				{
+					return;
+				}
 				continue;
 			}
 			if (_ball.Center().x >= _width - _ball.Radius() && !IsCollidePlayer2()) {
 				_ball.Collide(Ball::BORDER_RIGHT);
 				_winner = 1;
-				Win();
-				//dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
+				bool requestQuit = Win();
+				if (requestQuit)
+				{
+					return;
+				}
 				continue;
 			}
+			//Clear screen
+			SDL_SetRenderDrawColor(_render, 0, 102, 34, 0);
+			SDL_RenderClear(_render);
+
 
 			_ball.Move();
 
@@ -321,9 +326,6 @@ void MainGame::Play()
 			_player1.Draw();
 			_player2.Draw();
 			_ball.Draw();
-
-			//fill_circle(render, 100, 100, 50, 0xFF, 0x00, 0xFF, 0xFF);
-
 
 			//Update screen
 			SDL_RenderPresent(_render);
@@ -376,7 +378,7 @@ void MainGame::InitLayout()
 	_hozinotalBottom.y = _height - MARGIN_BOTTOM;
 }
 
-void MainGame::Win()
+bool MainGame::Win()
 {
 	SDL_Event e;
 
@@ -490,6 +492,7 @@ void MainGame::Win()
 	if (isQuit)
 	{
 		_isPlaying = false;
+		return true;
 	}
 	else if (indexPos == 0) {
 		if (_isCPU) {
@@ -505,6 +508,7 @@ void MainGame::Win()
 		_isPlaying = false;
 	}
 
+	return false;
 }
 
 void MainGame::DrawLayout()
@@ -515,6 +519,12 @@ void MainGame::DrawLayout()
 	SDL_RenderFillRect(_render, &_hozinotalBottom);
 	SDL_RenderFillRect(_render, &_hozinotalTop);
 
+	//draw center circle
+	Fill_circle(_render, _width / 2, _height / 2, 65, 51, 153, 51, 0);
+	for (int i = 0; i < 3; i++)
+	{
+		DrawCircle(_render, _width / 2, _height / 2, 65 + i, 255, 255, 255, 5);
+	}
 }
 
 MainGame::MainGame()

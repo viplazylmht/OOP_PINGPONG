@@ -29,6 +29,7 @@ public:
 
 	//attribute:
 private:
+
 	//window screen size
 	int _width;
 	int _height;
@@ -83,7 +84,8 @@ private:
 	void InitLayout();
 
 	// Description: Show Win layout and wait user select next action
-	void Win();
+	//Return: true if player hit quit button, false if not
+	bool Win();
 
 	// Description: Draw the border and center line while playing game
 	void DrawLayout();
