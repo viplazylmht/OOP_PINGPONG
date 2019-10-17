@@ -139,7 +139,7 @@ bool MainGame::ShowMainMenu()
 		}
 
 		//Clear screen
-		SDL_SetRenderDrawColor(_render, 0, 0, 0, 0);
+		SDL_SetRenderDrawColor(_render, 0x33, 0x00, 0x33, 0);
 		SDL_RenderClear(_render);
 
 		for (auto text : listText) {
@@ -196,12 +196,13 @@ void MainGame::Play()
 
 		listText.push_back(SDL_TextView(_render, 0, 10, "PING PONG", 25, fontPathCP));
 		listText[listText.size() - 1].SetCenterX(0, _width);
-		listText[listText.size() - 1].SetColor({ 255, 0, 255, 200 });
+		listText[listText.size() - 1].SetColor({ 255, 100, 255, 255 });
 
 		listText.push_back(SDL_TextView(_render, 0, _height - MARGIN_BOTTOM + 15, "Copyright by BHD233 & viplazylmht ! FIT @ HCMUS 2019", 18, fontPathCP));
 		listText[listText.size() - 1].SetCenterX(0, _width);
-		listText[listText.size() - 1].SetColor({ 255, 100, 100, 200 });
+		listText[listText.size() - 1].SetColor({ 255, 255, 0, 250 });
 
+		//value to store the place that CPU will want to go to hit the ball
 		int dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
 		cpu.SetWaitToNextMove(true);
 
@@ -265,7 +266,7 @@ void MainGame::Play()
 			}
 
 			//Clear screen
-			SDL_SetRenderDrawColor(_render, 0, 0, 0, 0xFF);
+			SDL_SetRenderDrawColor(_render, 0x00, 0x1A, 0x00, 0);
 			SDL_RenderClear(_render);
 
 			//collide player 1
@@ -274,6 +275,7 @@ void MainGame::Play()
 				_ball.Collide(Ball::BORDER_LEFT);
 				_ball.LevelUp();
 				dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
+				//stop CPU from following ball, make it to right dest
 				cpu.SetWaitToNextMove(false);
 			}
 			//collide player 2
@@ -282,6 +284,7 @@ void MainGame::Play()
 				_ball.Collide(Ball::BORDER_RIGHT);
 				_ball.LevelUp();
 				if (_isCPU) {
+					//Make CPU follow the ball untill ball collide player1
 					cpu.SetWaitToNextMove(true);
 				}
 			}
@@ -299,14 +302,14 @@ void MainGame::Play()
 				_ball.Collide(Ball::BORDER_LEFT);
 				_winner = 2;
 				Win();
-				dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
+				//dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
 				continue;
 			}
 			if (_ball.Center().x >= _width - _ball.Radius() && !IsCollidePlayer2()) {
 				_ball.Collide(Ball::BORDER_RIGHT);
 				_winner = 1;
 				Win();
-				dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
+				//dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
 				continue;
 			}
 
@@ -469,7 +472,7 @@ void MainGame::Win()
 		}
 
 		//Clear screen
-		SDL_SetRenderDrawColor(_render, 0, 0, 0, 0);
+		SDL_SetRenderDrawColor(_render, 0x33, 0x00, 0x33, 0);
 		SDL_RenderClear(_render);
 
 		for (auto text : listText) {
@@ -527,7 +530,7 @@ MainGame::MainGame()
 	_cpuLevel = -1;
 	_winner = 0;
 
-	_initSucess = initSDL(_window, _render, _width, _height);
+	_initSucess = InitSDL(_window, _render, _width, _height);
 
 	InitData(NULL);
 
@@ -544,7 +547,7 @@ MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int C
 	_isPlaying = false;
 	_initSucess = false;
 
-	_initSucess = initSDL(_window, _render, width, height);
+	_initSucess = InitSDL(_window, _render, width, height);
 
 	_isCPU = false;
 	_cpuLevel = -1;
@@ -557,10 +560,10 @@ MainGame::MainGame(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, int C
 
 MainGame::~MainGame()
 {
-	closeSDL(_window, _render);
+	CloseSDL(_window, _render);
 }
 
-bool MainGame::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, int SCREEN_WIDTH = DEFAULT_WIDTH, int SCREEN_HEIGHT = DEFAULT_HEIGHT)
+bool MainGame::InitSDL(SDL_Window*& window, SDL_Renderer*& renderer, int SCREEN_WIDTH = DEFAULT_WIDTH, int SCREEN_HEIGHT = DEFAULT_HEIGHT)
 {
 	//Initialization flag
 	bool success = true;
@@ -607,7 +610,7 @@ bool MainGame::initSDL(SDL_Window*& window, SDL_Renderer*& renderer, int SCREEN_
 	return success;
 }
 
-void MainGame::closeSDL(SDL_Window*& window, SDL_Renderer*& renderer)
+void MainGame::CloseSDL(SDL_Window*& window, SDL_Renderer*& renderer)
 {
 	//Destroy window    
 	SDL_DestroyRenderer(renderer);

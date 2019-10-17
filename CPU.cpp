@@ -28,12 +28,12 @@ char CPU::EasyCalcDirection(Ball ball, Player player, int top, int bottom)
 	}
 }
 
-//Description: calculate direction of player base on ball player
+//Description: calculate direction of player base on ball player hard level
 //top: top of screen
 //bottom: bottom of screen
 //realWidth: acttual width of screen
 //player: player that CPU control
-//Return: direction (up or down) or 0 if want CPU stand still
+//Return: possision y that player have to move to
 int CPU::HardCalcDestination(Ball ball, Player player, int top, int bottom, int realWidth)
 {
 	//let ball move
