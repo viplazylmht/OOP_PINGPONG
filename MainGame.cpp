@@ -139,7 +139,7 @@ bool MainGame::ShowMainMenu()
 		}
 
 		//Clear screen
-		SDL_SetRenderDrawColor(_render, 0, 0, 0, 0);
+		SDL_SetRenderDrawColor(_render, 0x33, 0x00, 0x33, 0);
 		SDL_RenderClear(_render);
 
 		for (auto text : listText) {
@@ -196,11 +196,11 @@ void MainGame::Play()
 
 		listText.push_back(SDL_TextView(_render, 0, 10, "PING PONG", 25, fontPathCP));
 		listText[listText.size() - 1].SetCenterX(0, _width);
-		listText[listText.size() - 1].SetColor({ 255, 0, 255, 200 });
+		listText[listText.size() - 1].SetColor({ 255, 100, 255, 255 });
 
 		listText.push_back(SDL_TextView(_render, 0, _height - MARGIN_BOTTOM + 15, "Copyright by BHD233 & viplazylmht ! FIT @ HCMUS 2019", 18, fontPathCP));
 		listText[listText.size() - 1].SetCenterX(0, _width);
-		listText[listText.size() - 1].SetColor({ 255, 100, 100, 200 });
+		listText[listText.size() - 1].SetColor({ 255, 255, 0, 250 });
 
 		//value to store the place that CPU will want to go to hit the ball
 		int dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
@@ -266,7 +266,7 @@ void MainGame::Play()
 			}
 
 			//Clear screen
-			SDL_SetRenderDrawColor(_render, 0, 0, 0, 0xFF);
+			SDL_SetRenderDrawColor(_render, 0x00, 0x1A, 0x00, 0);
 			SDL_RenderClear(_render);
 
 			//collide player 1
@@ -472,7 +472,7 @@ void MainGame::Win()
 		}
 
 		//Clear screen
-		SDL_SetRenderDrawColor(_render, 0, 0, 0, 0);
+		SDL_SetRenderDrawColor(_render, 0x33, 0x00, 0x33, 0);
 		SDL_RenderClear(_render);
 
 		for (auto text : listText) {
