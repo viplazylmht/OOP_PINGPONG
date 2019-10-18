@@ -51,11 +51,6 @@ public:
 	float AxisJ() { return _j; };
 	int Speed() { return (int)_speed; };
 
-	void SetCenter(Point);
-	void SetCenter(int, int);
-	void SetRadius(int);
-	void SetAxisI(int);
-	void SetAxisJ(int);
 
 // method
 public:
@@ -83,7 +78,10 @@ public:
 };
 
 // Description: Create and fill a cricle with given RGBA color 
-void fill_circle(SDL_Renderer*, int, int, int, Uint8, Uint8, Uint8, Uint8);
+void Fill_circle(SDL_Renderer* render, int cx, int cy, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+
+//Desciption: Draw a circle with given RGBA color
+void DrawCircle(SDL_Renderer* render, int cx, int cy, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
 //Desctiption: Random axits for ball
 void RandIandJ(float& i, float& j);
