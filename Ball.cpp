@@ -116,7 +116,6 @@ void Fill_circle(SDL_Renderer* render, int cx, int cy, int radius, Uint8 r, Uint
 		 //with a center and we need left/right coordinates.
 
 		double dx = floor(sqrt((2.0 * radius * dy) - (dy * dy)));
-		int x = cx - dx;
 		SDL_SetRenderDrawColor(render, r, g, b, a);
 
 		// Draw first half of circle
@@ -126,6 +125,26 @@ void Fill_circle(SDL_Renderer* render, int cx, int cy, int radius, Uint8 r, Uint
 		SDL_RenderDrawLine(render, cx - dx, cy - dy + radius, cx + dx, cy - dy + radius);
 
 	}
+}
+
+void DrawCircle(SDL_Renderer* render, int cx, int cy, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+	for (double dy = 1; dy <= radius; dy += 0.1)
+	{
+		double dx = floor(sqrt((2.0 * radius * dy) - (dy * dy)));
+		SDL_SetRenderDrawColor(render, r, g, b, a);
+
+		// Draw first half of circle
+		SDL_RenderDrawPoint(render, cx - dx, cy + dy - radius);
+		SDL_RenderDrawPoint(render, cx + dx, cy + dy - radius);
+		//SDL_RenderDrawLine(render, cx - dx, cy + dy - radius, cx + dx, cy + dy - radius);
+
+		// Draw second half of circle
+		SDL_RenderDrawPoint(render, cx - dx, cy - dy + radius);
+		SDL_RenderDrawPoint(render, cx + dx, cy - dy + radius);
+		//SDL_RenderDrawLine(render, cx - dx, cy - dy + radius, cx + dx, cy - dy + radius);
+
+	}	
 }
 
 void RandIandJ(float& i, float& j)

@@ -78,7 +78,10 @@ public:
 };
 
 // Description: Create and fill a cricle with given RGBA color 
-void Fill_circle(SDL_Renderer*, int, int, int, Uint8, Uint8, Uint8, Uint8);
+void Fill_circle(SDL_Renderer* render, int cx, int cy, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+
+//Desciption: Draw a circle with given RGBA color
+void DrawCircle(SDL_Renderer* render, int cx, int cy, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
 //Desctiption: Random axits for ball
 void RandIandJ(float& i, float& j);

@@ -7,8 +7,8 @@ class Player
 {
 public:
 	// const
-	static const int DEFAULT_LENGTH = 100;
-	static const int DEFAULT_WIDTH = 10;
+	static const int DEFAULT_LENGTH = 130;
+	static const int DEFAULT_WIDTH = 15;
 	static const int DEFAULT_SPEED = 10;
 	static const char MOVE_UP = 'u';
 	static const char MOVE_DOWN = 'd';
