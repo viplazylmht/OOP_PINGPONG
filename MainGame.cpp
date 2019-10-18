@@ -200,6 +200,12 @@ void MainGame::Play()
 		listText.push_back(SDL_TextView(_render, 0, _height - MARGIN_BOTTOM + 15, "Copyright by BHD233 & viplazylmht ! FIT @ HCMUS 2019", 18, fontPathCP));
 		listText[listText.size() - 1].SetCenterX(0, _width);
 		listText[listText.size() - 1].SetColor({ 255, 255, 0, 250 });
+		
+		listText.push_back(SDL_TextView(_render, 0, (_height - MARGIN_BOTTOM + MARGIN_TOP) / 2 - 25, "1", 40, fontPathCP));
+		listText[listText.size() - 1].SetCenterX(0, _width);
+		listText[listText.size() - 1].SetColor({ 255, 255, 0, 200 });
+
+		int score = 1;
 
 		//value to store the place that CPU will want to go to hit the ball
 		int dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
@@ -269,9 +275,15 @@ void MainGame::Play()
 			{
 				_ball.Collide(Ball::BORDER_LEFT);
 				_ball.LevelUp();
-				dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
-				//stop CPU from following ball, make it to right dest
-				cpu.SetWaitToNextMove(false);
+
+				if (_isCPU) {
+					dest = cpu.HardCalcDestination(_ball, _player2, 0 + MARGIN_TOP, _height - MARGIN_BOTTOM, _width);
+					//stop CPU from following ball, make it to right dest
+					cpu.SetWaitToNextMove(false);
+				}
+
+				score += 1;
+				listText[listText.size() - 1].SetText(to_string(score));
 			}
 			//collide player 2
 			if (IsCollidePlayer2()) 
@@ -296,21 +308,27 @@ void MainGame::Play()
 			if (_ball.Center().x <= 0 + _ball.Radius() && !IsCollidePlayer1()) {
 				_ball.Collide(Ball::BORDER_LEFT);
 				_winner = 2;
-				bool requestQuit = Win();
+				bool requestQuit = Win(score);
 				if (requestQuit)
 				{
 					return;
 				}
+				score = 1;
+				listText[listText.size() - 1].SetText(to_string(score));
+
 				continue;
 			}
 			if (_ball.Center().x >= _width - _ball.Radius() && !IsCollidePlayer2()) {
 				_ball.Collide(Ball::BORDER_RIGHT);
 				_winner = 1;
-				bool requestQuit = Win();
+				bool requestQuit = Win(score);
 				if (requestQuit)
 				{
 					return;
 				}
+				score = 1;
+				listText[listText.size() - 1].SetText(to_string(score));
+
 				continue;
 			}
 			//Clear screen
@@ -320,9 +338,10 @@ void MainGame::Play()
 
 			_ball.Move();
 
+			DrawLayout();
+
 			for (auto text : listText) text.Show();
 
-			DrawLayout();
 			_player1.Draw();
 			_player2.Draw();
 			_ball.Draw();
@@ -378,7 +397,7 @@ void MainGame::InitLayout()
 	_hozinotalBottom.y = _height - MARGIN_BOTTOM;
 }
 
-bool MainGame::Win()
+bool MainGame::Win(int score)
 {
 	SDL_Event e;
 
@@ -407,15 +426,21 @@ bool MainGame::Win()
 	//other posision if cpu win
 	if (winText == "CPU Win!!")
 	{
-		listText.push_back(SDL_TextView(_render, 520, 300, winText, 80, fontPath));
+		listText.push_back(SDL_TextView(_render, 520, 270, winText, 80, fontPath));
 	}
 	else
 	{
-		listText.push_back(SDL_TextView(_render, 400, 300, winText, 80, fontPath));
+		listText.push_back(SDL_TextView(_render, 400, 270, winText, 80, fontPath));
 	}
 	listText[listText.size() - 1].SetCenterX(0, _width);
+	
 	listText.push_back(SDL_TextView(_render, 450, 50, "PING PONG", 100, fontPath));
 	listText[listText.size() - 1].SetCenterX(0, _width);
+
+
+	listText.push_back(SDL_TextView(_render, 0, 370, "Score: " + to_string(score), 40, fontPath));
+	listText[listText.size() - 1].SetCenterX(0, _width);
+	listText[listText.size() - 1].SetColor({ 0, 255, 255, 255 });
 
 	listText[indexPos].SetFlag(SDL_TextView::SELECTED);
 
