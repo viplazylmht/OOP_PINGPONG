@@ -84,8 +84,9 @@ private:
 	void InitLayout();
 
 	// Description: Show Win layout and wait user select next action
+	// Parameter: The score of last game play
 	//Return: true if player hit quit button, false if not
-	bool Win();
+	bool Win(int);
 
 	// Description: Draw the border and center line while playing game
 	void DrawLayout();
