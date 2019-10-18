@@ -55,7 +55,7 @@ int CPU::HardCalcDestination(Ball ball, Player player, int top, int bottom, int 
 //Description: make player move to destination
 void CPU::MoveToDest(Player &player, int dest, int top, int bottom)
 {
-	if ((player.Pos().y + player.Length() / 2 < dest) && player.Pos().y < bottom)
+	if ((player.Pos().y + player.Length() / 2 < dest) && player.Pos().y + player.Length() < bottom)
 	{
 		player.Move(Player::MOVE_DOWN);
 	}
