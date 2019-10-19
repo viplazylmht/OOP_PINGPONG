@@ -420,27 +420,19 @@ bool MainGame::Win(int score)
 	
 	if (_isCPU && _winner == 2)
 	{
-		winText = "CPU Win!!";
+		winText = "CPU   Win!!";
 	}
 
-	//other posision if cpu win
-	if (winText == "CPU Win!!")
-	{
-		listText.push_back(SDL_TextView(_render, 520, 270, winText, 80, fontPath));
-	}
-	else
-	{
-		listText.push_back(SDL_TextView(_render, 400, 270, winText, 80, fontPath));
-	}
+		listText.push_back(SDL_TextView(_render, 400, 170, winText, 80, fontPath));
+	
 	listText[listText.size() - 1].SetCenterX(0, _width);
 	
 	listText.push_back(SDL_TextView(_render, 450, 50, "PING PONG", 100, fontPath));
 	listText[listText.size() - 1].SetCenterX(0, _width);
 
-
-	listText.push_back(SDL_TextView(_render, 0, 370, "Score: " + to_string(score), 40, fontPath));
+	listText.push_back(SDL_TextView(_render, 0, (_height - MARGIN_BOTTOM + MARGIN_TOP) / 2 - 25, to_string(score), 40, fontPath));
 	listText[listText.size() - 1].SetCenterX(0, _width);
-	listText[listText.size() - 1].SetColor({ 0, 255, 255, 255 });
+	listText[listText.size() - 1].SetColor({ 255, 255, 0, 200 });
 
 	listText[indexPos].SetFlag(SDL_TextView::SELECTED);
 
@@ -499,8 +491,10 @@ bool MainGame::Win(int score)
 		}
 
 		//Clear screen
-		SDL_SetRenderDrawColor(_render, 0x33, 0x00, 0x33, 0);
+		SDL_SetRenderDrawColor(_render, 0, 102, 34, 0);
 		SDL_RenderClear(_render);
+
+		DrawLayout();
 
 		for (auto text : listText) {
 			text.Show();
